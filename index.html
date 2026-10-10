@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f5f5b">
+</head>
+<body>
+<!--APP-START-->
+<title>대구 강사공고 레이더</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: 관공서 게시판 공고문처럼 — 상단 요약 띠, 탭, 한 열짜리 공고 카드. 마감 임박은 도장 같은 주홍색. */
+:root {
+  --bg: #f5f6f3;
+  --surface: #ffffff;
+  --ink: #1b2a2f;
+  --muted: #5d6b6f;
+  --line: #d9ded9;
+  --accent: #1f5f5b;
+  --accent-soft: #e2eeec;
+  --stamp: #c2410c;
+  --stamp-soft: #fbe9df;
+  --ok: #2f7a3e;
+  --ok-soft: #e3f1e4;
+  --warn: #9a6a00;
+  --warn-soft: #f8efd6;
+  --off: #8a9497;
+  --off-soft: #eceeed;
+  --f-display: "Nanum Myeongjo", "Noto Serif KR", serif;
+  --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12191b; --surface: #1a2326; --ink: #e4ebea; --muted: #9aa8aa; --line: #2c393c;
+    --accent: #6fbdb5; --accent-soft: #1d3634; --stamp: #f08a5d; --stamp-soft: #3a2219;
+    --ok: #79c58a; --ok-soft: #1c3322; --warn: #e2b54f; --warn-soft: #362c14; --off: #7c888b; --off-soft: #232d30;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12191b; --surface: #1a2326; --ink: #e4ebea; --muted: #9aa8aa; --line: #2c393c;
+  --accent: #6fbdb5; --accent-soft: #1d3634; --stamp: #f08a5d; --stamp-soft: #3a2219;
+  --ok: #79c58a; --ok-soft: #1c3322; --warn: #e2b54f; --warn-soft: #362c14; --off: #7c888b; --off-soft: #232d30;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--f-body); }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 56px; display: grid; gap: 20px; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header { display: grid; gap: 6px; }
+.eyebrow { font: 600 12px/1 var(--f-mono); letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+h1 { font: 800 clamp(26px, 6vw, 34px)/1.2 var(--f-display); margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 60ch; }
+
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--surface); border-radius: 6px; }
+.summary > div { padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
+.summary > div + div { border-left: 1px solid var(--line); }
+.summary b { font: 600 22px/1.2 var(--f-mono); font-variant-numeric: tabular-nums; }
+.summary span { font-size: 12px; color: var(--muted); }
+.summary .hot b { color: var(--stamp); }
+
+nav { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 2; }
+nav button { font: 500 14px var(--f-body); color: var(--muted); background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 12px; cursor: pointer; white-space: nowrap; }
+nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.chipbtn { font: 500 13px var(--f-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+.chipbtn[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+
+.list { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; }
+.card > .body { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.dday { display: grid; align-content: start; justify-items: center; gap: 2px; padding-top: 2px; }
+.dday b { white-space: nowrap; font: 600 20px/1.1 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--accent); }
+.dday small { font-size: 11px; color: var(--muted); text-align: center; }
+.dday.urgent b { color: var(--stamp); border: 2px solid var(--stamp); border-radius: 4px; padding: 2px 6px; transform: rotate(-4deg); }
+.dday.past b { color: var(--off); }
+.card h3 { margin: 0; font: 600 16px/1.45 var(--f-body); text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.pill { font: 600 11px/1 var(--f-body); padding: 4px 7px; border-radius: 3px; letter-spacing: .02em; }
+.p-강사모집 { background: var(--accent-soft); color: var(--accent); }
+.p-강좌개설 { background: var(--warn-soft); color: var(--warn); }
+.p-수강생모집 { background: var(--off-soft); color: var(--muted); }
+.s-진행중 { background: var(--stamp-soft); color: var(--stamp); }
+.s-마감 { background: var(--off-soft); color: var(--off); }
+.s-예상 { background: var(--warn-soft); color: var(--warn); }
+.s-상시 { background: var(--ok-soft); color: var(--ok); }
+.s-참고 { background: var(--off-soft); color: var(--muted); }
+.s-자동 { background: var(--accent-soft); color: var(--accent); }
+.note { margin: 0; font-size: 14px; color: var(--ink); }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+.files { margin: 0; padding: 0; list-style: none; font-size: 13px; display: grid; gap: 2px; }
+.files li::before { content: "첨부 · "; color: var(--muted); font-family: var(--f-mono); font-size: 11px; }
+.empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
+
+.timeline { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; }
+.tl { min-width: 520px; display: grid; grid-template-columns: 120px 1fr; gap: 6px 10px; font-size: 13px; position: relative; }
+.tl .months { display: grid; grid-template-columns: repeat(5, 1fr); font: 500 11px var(--f-mono); color: var(--muted); border-bottom: 1px solid var(--line); }
+.tl .months span { padding-bottom: 4px; border-left: 1px solid var(--line); padding-left: 4px; }
+.tl .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl .track { position: relative; height: 18px; background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 1px), var(--line) calc(20% - 1px) 20%); }
+.tl .bar { position: absolute; top: 3px; height: 12px; border-radius: 2px; background: var(--accent); opacity: .85; min-width: 6px; }
+.tl .bar.c-낮음 { background: var(--off); }
+.tl .bar.c-중간 { background: var(--warn); }
+.tl .bar.live { background: var(--stamp); }
+.tl .today { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--stamp); }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+
+.group h2 { font: 700 18px/1.3 var(--f-display); margin: 4px 0 8px; }
+.sites { display: grid; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.site { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; padding: 10px 14px; align-items: start; }
+.site + .site { border-top: 1px solid var(--line); }
+.site input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--accent); }
+.site .nm { font-weight: 500; }
+.site .sub { grid-column: 2; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.unverified { color: var(--warn); }
+
+form { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 12px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+input[type="text"], input[type="url"], input[type="date"], select, textarea { font: 15px var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; width: 100%; }
+textarea { min-height: 70px; resize: vertical; }
+.primary { justify-self: start; font: 600 14px var(--f-body); background: var(--accent); color: var(--surface); border: 0; border-radius: 4px; padding: 10px 18px; cursor: pointer; }
+.ghost { font: 500 12px var(--f-body); background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+.toast { font-size: 13px; color: var(--ok); min-height: 1.4em; margin: 0; }
+.foot { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 4px; }
+
+@media (max-width: 480px) {
+  .card { grid-template-columns: 70px minmax(0, 1fr); gap: 10px; padding: 12px; }
+  .dday b { font-size: 17px; }
+  .summary b { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow" id="today"></span>
+    <h1>대구 강사공고 레이더</h1>
+    <p class="lede">대구 평생교육원·도서관·구청·문화센터·클래스 플랫폼 22곳의 강사모집과 강좌개설 공고를 한곳에 모았습니다. 마감일 기준 D-day, 공고 링크, 첨부파일을 같이 보여줍니다.</p>
+  </header>
+
+  <section class="summary" aria-label="요약">
+    <div class="hot"><b id="sumLive">0</b><span>지금 접수 중</span></div>
+    <div><b id="sumSoon">0</b><span>30일 안에 열릴 예상</span></div>
+    <div><b id="sumNext">-</b><span>다음 점검 (월)</span></div>
+  </section>
+
+  <nav role="tablist" aria-label="보기">
+    <button role="tab" id="tab-notices" aria-selected="true" data-tab="notices">공고</button>
+    <button role="tab" id="tab-forecast" aria-selected="false" data-tab="forecast">예상 일정</button>
+    <button role="tab" id="tab-sites" aria-selected="false" data-tab="sites">기관 목록</button>
+    <button role="tab" id="tab-add" aria-selected="false" data-tab="add">공고 추가</button>
+  </nav>
+
+  <section id="panel-notices" role="tabpanel" aria-labelledby="tab-notices" class="list">
+    <div class="filters" id="filters"></div>
+    <div class="list" id="noticeList"></div>
+  </section>
+
+  <section id="panel-forecast" role="tabpanel" aria-labelledby="tab-forecast" class="list" hidden>
+    <p class="note">작년 공고 일정과 기관 학사편람을 근거로 이번 겨울(2026.10 ~ 2027.2)에 열릴 시기를 추정했습니다. 막대가 오늘선(주홍)에 걸려 있으면 이번 주에 바로 확인하세요.</p>
+    <div class="timeline"><div class="tl" id="timeline"></div>
+      <div class="legend"><span><i style="background:var(--stamp)"></i>접수 중 확인</span><span><i style="background:var(--accent)"></i>근거 높음</span><span><i style="background:var(--warn)"></i>근거 중간</span><span><i style="background:var(--off)"></i>근거 낮음 (일반 패턴)</span></div>
+    </div>
+    <div class="list" id="forecastList"></div>
+  </section>
+
+  <section id="panel-sites" role="tabpanel" aria-labelledby="tab-sites" class="list" hidden>
+    <p class="note">월요일마다 아래 기관을 돌며 확인합니다. 체크는 이번 주에만 유지되고 다음 월요일에 초기화됩니다. <span class="unverified">주소 확인 필요</span> 표시는 홈페이지만 확인된 곳이라 평생교육 게시판 주소로 바꿔야 합니다.</p>
+    <div id="siteGroups" class="list"></div>
+  </section>
+
+  <section id="panel-add" role="tabpanel" aria-labelledby="tab-add" hidden>
+    <form id="addForm">
+      <p class="note">직접 찾은 공고를 넣으면 공고 탭에 D-day와 함께 표시됩니다. 이 기기에만 저장됩니다.</p>
+      <div class="row">
+        <label>기관<select id="fSrc"></select></label>
+        <label>유형<select id="fType"><option>강사모집</option><option>강좌개설</option><option>수강생모집</option></select></label>
+      </div>
+      <label>공고 제목<input type="text" id="fTitle" required placeholder="예: 2027년 상반기 정규강좌 강사 공개모집"></label>
+      <div class="row">
+        <label>접수 시작<input type="date" id="fOpen"></label>
+        <label>접수 마감<input type="date" id="fDeadline" required></label>
+      </div>
+      <label>공고 링크<input type="url" id="fLink" placeholder="https://"></label>
+      <label>첨부파일 (한 줄에 하나, "파일명 링크")<textarea id="fFiles" placeholder="공고문.hwp https://...&#10;지원서.hwp https://..."></textarea></label>
+      <button class="primary" type="submit">공고 추가</button>
+      <p class="toast" id="toast" role="status"></p>
+    </form>
+  </section>
+
+  <footer class="foot">
+    <span id="checkedLine"></span>
+    <span>자동 점검: 매주 월요일 09:00 GitHub Actions가 게시판을 읽어 키워드(강사·모집·공모·강좌개설·인력풀 등)로 새 글을 찾고, 본문의 첨부파일과 마감일을 함께 저장합니다.</span>
+  </footer>
+</div>
+
+<script>
+const TODAY = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); })();
+
+const SOURCES = [
+  { id: "knu", name: "경북대학교 평생교육원", group: "대학 평생교육원", home: "https://lifelong.knu.ac.kr", login: "강좌개설 신청 시 회원 로그인", verified: true },
+  { id: "kmu", name: "계명대학교 평생교육원", group: "대학 평생교육원", home: "https://www.kmu.ac.kr", login: "확인 필요", verified: false },
+  { id: "yu", name: "영남대학교 평생교육원", group: "대학 평생교육원", home: "https://www.yu.ac.kr", login: "확인 필요", verified: false },
+  { id: "du", name: "대구대학교 평생교육원", group: "대학 평생교육원", home: "https://www.daegu.ac.kr", login: "확인 필요", verified: false },
+  { id: "cu", name: "대구가톨릭대학교 평생교육원", group: "대학 평생교육원", home: "https://www.cu.ac.kr", login: "확인 필요", verified: false },
+  { id: "study", name: "대구평생학습플랫폼 (대구행복진흥원·시민대학)", group: "대구시·진흥원", home: "https://study.daegu.kr", login: "시민제안강의 공모 시 회원", verified: true },
+  { id: "daegu", name: "대구광역시청 고시·공고", group: "대구시·진흥원", home: "https://www.daegu.go.kr", login: "불필요", verified: false },
+  { id: "dgelib", name: "대구시교육청 공공도서관 10곳 (통합 홈페이지)", group: "도서관·교육청", home: "https://library.daegu.go.kr", login: "불필요", verified: true },
+  { id: "dge", name: "대구광역시교육청 (늘봄·방과후 강사풀)", group: "도서관·교육청", home: "https://www.dge.go.kr", login: "강사 선정 지원시스템 회원", verified: true },
+  { id: "dalseo", name: "달서구 · 달서평생학습관", group: "구·군 평생학습", home: "https://www.dalseo.daegu.kr", login: "불필요 (방문 제출)", verified: true },
+  { id: "suseong", name: "수성구 평생학습", group: "구·군 평생학습", home: "https://www.suseong.kr", login: "확인 필요", verified: false },
+  { id: "buk", name: "북구 평생학습센터", group: "구·군 평생학습", home: "https://www.buk.daegu.kr", login: "확인 필요", verified: false },
+  { id: "dong", name: "동구 평생학습", group: "구·군 평생학습", home: "https://www.dong.daegu.kr", login: "확인 필요", verified: false },
+  { id: "jung", name: "중구 평생학습", group: "구·군 평생학습", home: "https://www.jung.daegu.kr", login: "확인 필요", verified: false },
+  { id: "seo", name: "서구 평생학습", group: "구·군 평생학습", home: "https://www.dgs.go.kr", login: "확인 필요", verified: false },
+  { id: "nam", name: "남구 평생학습", group: "구·군 평생학습", home: "https://nam.daegu.kr", login: "확인 필요", verified: false },
+  { id: "dalseong", name: "달성군 평생학습", group: "구·군 평생학습", home: "https://www.dalseong.daegu.kr", login: "확인 필요", verified: false },
+  { id: "sssd", name: "솜씨당 (원데이클래스 플랫폼)", group: "클래스 플랫폼·문화센터", home: "https://www.sssd.co.kr", login: "호스트 입점 시 회원", verified: true },
+  { id: "moka", name: "모카플러스 · 더현대 대구 6F", group: "클래스 플랫폼·문화센터", home: "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do", login: "불필요", verified: true },
+  { id: "hyundai", name: "현대백화점 문화센터 (더현대 대구)", group: "클래스 플랫폼·문화센터", home: "https://www.ehyundai.com/newCulture/CT/CT000000_M.do", login: "회원", verified: true },
+  { id: "shinsegae", name: "신세계 아카데미 (대구신세계)", group: "클래스 플랫폼·문화센터", home: "https://www.shinsegae.com", login: "회원", verified: false },
+  { id: "lotte", name: "롯데 문화센터 (대구점·상인점)", group: "클래스 플랫폼·문화센터", home: "https://culture.lotteshopping.com", login: "회원", verified: false },
+];
+const SRC = Object.fromEntries(SOURCES.map(s => [s.id, s]));
+
+/* 2026-10-10 조사 결과. ref 는 근거 기사/문서, link 는 원 공고를 찾을 곳. */
+const NOTICES = [
+  { id: "dge-neulbom-2027", src: "dge", type: "강사모집", status: "진행중",
+    title: "2027학년도 늘봄·방과후학교 강사 인력풀 모집",
+    open: "2026-10-06", deadline: "2026-11-02",
+    link: "https://www.dge.go.kr",
+    ref: [["아시아경제 보도 (2026.10.06)", "https://view.asiae.co.kr/article/2026100611212164274"]],
+    files: [],
+    note: "지금 접수 중입니다. 공고문·지원서 양식은 교육청 공고 원문에 첨부돼 있습니다. 작년(2026학년도)은 11월 30일 마감, 12월 중순 발표였습니다." },
+  { id: "dalseo-2027", src: "dalseo", type: "강사모집", status: "마감",
+    title: "달서평생학습관 2027년도 정규강좌 강사 35명 공개모집",
+    open: "2026-09-14", deadline: "2026-09-16",
+    link: "https://www.dalseo.daegu.kr",
+    ref: [["아시아경제 (2026.09.09)", "https://view.asiae.co.kr/article/2026090909592514769"], ["한국사회복지저널", "https://www.ksw-news.com/news/articleView.html?idxno=3033109"]],
+    files: [],
+    note: "어학·음악·미술·디지털·생활체육·요리·차·식물·공예·교양 등 9분야 50강좌. 구청 홈페이지에서 지원서를 받아 방문 제출, 서류 후 면접, 2027.1~12 위촉. 다음 모집은 2027년 9월로 예상합니다." },
+  { id: "study-2026h2", src: "study", type: "수강생모집", status: "참고",
+    title: "2026 하반기 대구시민대학 (26개 강좌, 10.1~12.4 운영)",
+    open: "2026-09-07", deadline: null,
+    link: "https://study.daegu.kr",
+    ref: [["경북매일 (2026.09.07)", "https://kbmaeil.com/article/20260907500319"]],
+    files: [],
+    note: "시민제안강의 23개는 공모로 이미 선정됐습니다. 강사로 들어가려면 다음 상반기 시민제안강의 공모를 노려야 합니다(예상 일정 탭)." },
+  { id: "dgelib-2026h2", src: "dgelib", type: "수강생모집", status: "참고",
+    title: "대구시교육청 공공도서관 10곳 2026 하반기 평생교육 프로그램 190개",
+    open: "2026-08-04", deadline: null,
+    link: "https://library.daegu.go.kr",
+    ref: [["경북매일 (2026.08.04)", "https://www.kbmaeil.com/article/20260804500512"]],
+    files: [],
+    note: "8~12월 운영 중. 2027 상반기 프로그램 강사 모집은 12~1월 공지로 예상합니다." },
+  { id: "sssd-host", src: "sssd", type: "강좌개설", status: "상시",
+    title: "솜씨당 호스트(클래스 개설) 입점 신청",
+    open: null, deadline: null,
+    link: "https://www.sssd.co.kr", ref: [], files: [],
+    note: "마감 없는 상시 입점입니다. 겨울 시즌 클래스는 11월 안에 등록해 두면 12월 수요를 잡기 좋습니다." },
+];
+
+/* 예상 일정. conf: 높음/중간/낮음. live=true 는 이미 열린 것이 확인된 항목. */
+const FORECAST = [
+  { src: "dge", short: "교육청 늘봄 강사풀", title: "늘봄·방과후 강사 인력풀 (2027학년도)", start: "2026-10-06", end: "2026-11-02", conf: "높음", live: true,
+    basis: "2026.10.06 보도로 접수 확인. 작년은 11월 말까지 온라인 접수." },
+  { src: "knu", short: "경북대 겨울학기", title: "경북대 평생교육원 겨울학기 강좌개설·강사 모집", start: "2026-10-12", end: "2026-11-06", conf: "중간",
+    basis: "평생교육원 학사업무편람: 겨울학기 모집공고 10월, 접수 10월 말, 심사·결정 11월 초. 지금이 공고 시점입니다.",
+    ref: ["학사업무편람 (경북대 평생교육원)", "https://lifelong.knu.ac.kr/public/lfldc/downloadfile/202203300515226073mzy6tgrww37n"] },
+  { src: "hyundai", short: "현대 문화센터", title: "현대백화점 문화센터 겨울학기 회원모집 (더현대 대구)", start: "2026-10-19", end: "2026-11-30", conf: "높음",
+    basis: "작년 겨울학기는 10월 21일 회원모집 시작, 12.1~2.28 운영. 겨울 강좌 라인업은 이미 확정 단계라 강사 제안은 봄학기(3월) 대상으로 12~1월에 넣는 게 맞습니다.",
+    ref: ["헤럴드경제 (2025.10.19)", "https://www.heraldk.com/article/2025101921204728928"] },
+  { src: "shinsegae", short: "신세계·롯데", title: "신세계·롯데 문화센터 겨울학기 회원모집", start: "2026-10-20", end: "2026-11-30", conf: "낮음",
+    basis: "백화점 문화센터는 학기 시작 약 한 달 전에 라인업을 공개합니다. 강사 제안은 상시 접수가 일반적입니다." },
+  { src: "moka", short: "모카플러스", title: "모카플러스 겨울방학 프로그램 공지", start: "2026-11-01", end: "2026-12-15", conf: "낮음",
+    basis: "어린이책미술관 전시·교육 공간이라 정기 강사 공모는 확인되지 않았습니다. 겨울방학 프로그램이 11월쯤 공지되면 협업 제안 시점으로 보세요." },
+  { src: "knu", short: "대학 봄학기 개설", title: "대학 평생교육원 2027 봄학기 신규강좌 개설 신청 (경북대·계명대·영남대 등)", start: "2026-11-01", end: "2026-12-20", conf: "낮음",
+    basis: "경북대 편람상 신규강좌 공모는 11월. 다른 대학도 봄학기 2~3개월 전에 받는 경우가 많습니다." },
+  { src: "dgelib", short: "공공도서관", title: "공공도서관 겨울방학 특강 · 2027 상반기 강사 모집", start: "2026-11-10", end: "2027-01-20", conf: "낮음",
+    basis: "하반기 프로그램이 8월 발표·12월 종료, 상반기는 3월 시작이라 강사 공고는 12~1월로 추정합니다." },
+  { src: "suseong", short: "구·군 평생학습", title: "구·군 평생학습센터 2027 상반기 강사 공모 (수성·북·동·중·서·남·달성)", start: "2026-11-15", end: "2027-01-31", conf: "낮음",
+    basis: "달서구는 9월에 연간 정규강사를 뽑았습니다(종료). 나머지 구·군은 상반기 강좌 시작 전 11~1월 공고가 일반적입니다." },
+  { src: "study", short: "시민제안강의", title: "대구시민대학 2027 상반기 시민제안강의 공모", start: "2027-01-05", end: "2027-02-27", conf: "중간",
+    basis: "2026 상반기는 4월 8일 수강생 모집, 4.27~6.26 운영. 강의 공모는 수강생 모집 2~3개월 전에 열립니다." },
+];
+
+const TYPES = ["전체", "강사모집", "강좌개설", "수강생모집"];
+let filter = "전체";
+
+function parse(d) { if (!d) return null; const [y, m, dd] = d.split("-").map(Number); return new Date(y, m - 1, dd); }
+function diffDays(d) { return Math.round((parse(d) - TODAY) / 86400000); }
+function fmt(d) { const x = parse(d); return x ? `${x.getMonth() + 1}.${x.getDate()}` : ""; }
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+function nextMonday() { const d = new Date(TODAY); const add = ((8 - d.getDay()) % 7) || 7; d.setDate(d.getDate() + add); return d; }
+function weekKey() { const d = new Date(TODAY); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.toISOString().slice(0, 10); }
+
+const store = {
+  get(k, fallback) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch { return fallback; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+let autoNotices = [];
+let checkedOn = "2026-10-10";
+
+function allNotices() {
+  const mine = store.get("myNotices", []).map(n => ({ ...n, mine: true }));
+  return [...mine, ...autoNotices, ...NOTICES].map(n => {
+    let status = n.status;
+    if (n.deadline && (status === "진행중" || status === "자동" || n.mine)) status = diffDays(n.deadline) < 0 ? "마감" : "진행중";
+    return { ...n, status };
+  });
+}
+
+function ddayBlock(n) {
+  if (!n.deadline) return `<div class="dday"><b>${n.status === "상시" ? "상시" : "—"}</b><small>${n.status === "상시" ? "마감 없음" : "마감일 미정"}</small></div>`;
+  const d = diffDays(n.deadline);
+  const label = d === 0 ? "D-DAY" : d > 0 ? `D-${d}` : `D+${-d}`;
+  const cls = d < 0 ? "past" : d <= 14 ? "urgent" : "";
+  return `<div class="dday ${cls}"><b>${label}</b><small>${fmt(n.deadline)} 마감</small></div>`;
+}
+
+function renderNotices() {
+  document.getElementById("filters").innerHTML = TYPES.map(t => `<button class="chipbtn" aria-pressed="${t === filter}" data-f="${t}">${t}</button>`).join("");
+  const order = { 진행중: 0, 자동: 1, 상시: 2, 참고: 3, 마감: 4 };
+  const list = allNotices()
+    .filter(n => filter === "전체" || n.type === filter)
+    .sort((a, b) => (order[a.status] - order[b.status]) || ((a.deadline ? diffDays(a.deadline) : 999) - (b.deadline ? diffDays(b.deadline) : 999)));
+  const el = document.getElementById("noticeList");
+  if (!list.length) { el.innerHTML = `<div class="empty">이 유형의 공고가 아직 없습니다.</div>`; return; }
+  el.innerHTML = list.map(n => {
+    const src = SRC[n.src] || { name: n.src, home: "#" };
+    const files = (n.files || n.attachments || []);
+    const period = n.open || n.deadline ? `<span>${n.open ? fmt(n.open) : ""} ~ ${n.deadline ? fmt(n.deadline) : ""}</span>` : "";
+    return `<article class="card">
+      ${ddayBlock(n)}
+      <div class="body"><div class="meta"><span class="pill p-${esc(n.type)}">${esc(n.type)}</span><span class="pill s-${esc(n.status)}">${esc(n.status)}</span><span>${esc(src.name)}</span>${period}${n.mine ? `<button class="ghost" data-del="${esc(n.id)}">삭제</button>` : ""}</div>
+      <h3>${esc(n.title)}</h3>
+      ${n.note ? `<p class="note">${esc(n.note)}</p>` : ""}
+      <div class="links">
+        <a href="${esc(n.link || n.url || src.home)}" target="_blank" rel="noopener">공고 바로가기 ↗</a>
+        ${(n.ref || []).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("")}
+      </div>
+      ${files.length ? `<ul class="files">${files.map(f => `<li><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)}</a></li>`).join("")}</ul>` : `<ul class="files"><li>공고 원문 첨부 확인 (공고문·지원서·강의계획서)</li></ul>`}</div>
+    </article>`;
+  }).join("");
+}
+
+function renderForecast() {
+  const from = new Date(2026, 9, 1), to = new Date(2027, 2, 1);
+  const span = to - from;
+  const pct = d => Math.max(0, Math.min(100, (parse(d) - from) / span * 100));
+  const todayPct = Math.max(0, Math.min(100, (TODAY - from) / span * 100));
+  const rows = [...FORECAST].sort((a, b) => parse(a.start) - parse(b.start));
+  document.getElementById("timeline").innerHTML =
+    `<span></span><div class="months"><span>10월</span><span>11월</span><span>12월</span><span>1월</span><span>2월</span></div>` +
+    rows.map(f => `<span class="name" title="${esc(f.title)}">${esc(f.short)}</span>
+      <div class="track"><div class="bar c-${f.conf} ${f.live ? "live" : ""}" style="left:${pct(f.start)}%;width:${pct(f.end) - pct(f.start)}%"></div><div class="today" style="left:${todayPct}%"></div></div>`).join("");
+  document.getElementById("forecastList").innerHTML = rows.map(f => {
+    const d = diffDays(f.start), e = diffDays(f.end);
+    const when = f.live ? "접수 중" : d > 0 ? `열림까지 D-${d}` : e >= 0 ? "지금 열릴 시점" : "지나감";
+    const cls = f.live || (d <= 0 && e >= 0) ? "urgent" : "";
+    return `<article class="card">
+      <div class="dday ${cls}"><b>${d > 0 && !f.live ? "D-" + d : f.live ? "접수중" : e >= 0 ? "지금" : "지남"}</b><small>${fmt(f.start)} ~ ${fmt(f.end)}</small></div>
+      <div class="body"><div class="meta"><span class="pill ${f.live ? "s-진행중" : "s-예상"}">${f.live ? "확인됨" : "예상"}</span><span>근거 ${esc(f.conf)}</span><span>${esc(when)}</span></div>
+      <h3>${esc(f.title)}</h3>
+      <p class="note">${esc(f.basis)}</p>
+      <div class="links"><a href="${esc((SRC[f.src] || {}).home)}" target="_blank" rel="noopener">기관 홈페이지 ↗</a>${f.ref ? `<a href="${esc(f.ref[1])}" target="_blank" rel="noopener">${esc(f.ref[0])} ↗</a>` : ""}</div></div>
+    </article>`;
+  }).join("");
+}
+
+function renderSites() {
+  const done = store.get("checked:" + weekKey(), {});
+  const groups = [...new Set(SOURCES.map(s => s.group))];
+  document.getElementById("siteGroups").innerHTML = groups.map(g => `<div class="group"><h2>${esc(g)}</h2><div class="sites">${
+    SOURCES.filter(s => s.group === g).map(s => `<div class="site">
+      <input type="checkbox" id="chk-${s.id}" data-chk="${s.id}" ${done[s.id] ? "checked" : ""} aria-label="${esc(s.name)} 이번 주 확인">
+      <label for="chk-${s.id}" class="nm" style="color:var(--ink);font-size:15px">${esc(s.name)}</label>
+      <div class="sub"><a href="${esc(s.home)}" target="_blank" rel="noopener">${esc(s.home.replace(/^https?:\/\//, "").replace(/\/.*/, ""))} ↗</a><span>로그인: ${esc(s.login)}</span>${s.verified ? "" : `<span class="unverified">주소 확인 필요</span>`}</div>
+    </div>`).join("")}</div></div>`).join("");
+}
+
+function renderSummary() {
+  const live = allNotices().filter(n => n.status === "진행중").length;
+  const soon = FORECAST.filter(f => !f.live && diffDays(f.start) >= 0 && diffDays(f.start) <= 30).length;
+  const nm = nextMonday();
+  document.getElementById("sumLive").textContent = live;
+  document.getElementById("sumSoon").textContent = soon;
+  document.getElementById("sumNext").textContent = `${nm.getMonth() + 1}.${nm.getDate()}`;
+  const w = "일월화수목금토"[TODAY.getDay()];
+  document.getElementById("today").textContent = `오늘 ${TODAY.getFullYear()}.${TODAY.getMonth() + 1}.${TODAY.getDate()} (${w})`;
+  document.getElementById("checkedLine").textContent = `마지막 점검 ${checkedOn} · 기관 ${SOURCES.length}곳`;
+}
+
+function renderAll() { renderSummary(); renderNotices(); renderForecast(); renderSites(); }
+
+document.querySelector("nav").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]"); if (!b) return;
+  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll("[role=tabpanel]").forEach(p => p.hidden = p.id !== "panel-" + b.dataset.tab);
+  store.set("tab", b.dataset.tab);
+});
+document.getElementById("filters").addEventListener("click", e => {
+  const b = e.target.closest("[data-f]"); if (b) { filter = b.dataset.f; renderNotices(); }
+});
+document.getElementById("noticeList").addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if (!b) return;
+  store.set("myNotices", store.get("myNotices", []).filter(n => n.id !== b.dataset.del)); renderAll();
+});
+document.getElementById("siteGroups").addEventListener("change", e => {
+  const id = e.target.dataset.chk; if (!id) return;
+  const k = "checked:" + weekKey(); const v = store.get(k, {}); v[id] = e.target.checked; store.set(k, v);
+});
+
+const sel = document.getElementById("fSrc");
+sel.innerHTML = SOURCES.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join("");
+document.getElementById("addForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const files = document.getElementById("fFiles").value.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+    const m = l.match(/^(.*?)\s*(https?:\/\/\S+)$/); return m ? { name: m[1] || m[2], url: m[2] } : { name: l, url: "#" };
+  });
+  const n = {
+    id: "my-" + Date.now(), src: sel.value, type: document.getElementById("fType").value, status: "진행중",
+    title: document.getElementById("fTitle").value.trim(), open: document.getElementById("fOpen").value || null,
+    deadline: document.getElementById("fDeadline").value, link: document.getElementById("fLink").value.trim(), files, ref: [],
+  };
+  store.set("myNotices", [n, ...store.get("myNotices", [])]);
+  e.target.reset();
+  document.getElementById("toast").textContent = `추가했습니다: ${n.title} (D-${Math.max(0, diffDays(n.deadline))})`;
+  renderAll();
+});
+
+const savedTab = store.get("tab", null);
+if (savedTab) document.querySelector(`nav button[data-tab="${savedTab}"]`)?.click();
+renderAll();
+
+/* GitHub Actions가 저장한 자동 점검 결과가 있으면 합친다. */
+fetch("data/notices.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  autoNotices = (d.notices || []).map(n => ({ ...n, status: "자동", files: n.attachments }));
+  if (d.checked) checkedOn = d.checked;
+  renderAll();
+}).catch(() => {});
+</script>
+<!--APP-END-->
+</body>
+</html>

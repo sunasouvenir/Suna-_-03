@@ -1,0 +1,32 @@
+{
+  "_note": "모니터링 대상 기관 목록. boards 에 공지/강사모집 게시판 URL 을 넣으면 매주 월요일 자동 점검에 포함됩니다. verified=false 인 URL 은 홈페이지 주소만 확인된 상태라 게시판 주소로 바꿔주는 게 좋습니다.",
+  "keywords": ["강사", "모집", "공모", "강좌개설", "강좌 개설", "개설신청", "프로그램 제안", "강의 제안", "인력풀", "위촉", "시민제안"],
+  "sources": [
+    {"id": "knu", "name": "경북대학교 평생교육원", "group": "대학 평생교육원", "home": "https://lifelong.knu.ac.kr", "boards": ["https://lifelong.knu.ac.kr"], "login": "강좌개설 신청 시 회원 로그인", "verified": true},
+    {"id": "kmu", "name": "계명대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.kmu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "yu", "name": "영남대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.yu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "du", "name": "대구대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.daegu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "cu", "name": "대구가톨릭대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.cu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
+
+    {"id": "study", "name": "대구평생학습플랫폼 (대구행복진흥원·대구시민대학)", "group": "대구시·진흥원", "home": "https://study.daegu.kr", "boards": ["https://study.daegu.kr"], "login": "시민제안강의 공모 신청 시 회원", "verified": true},
+    {"id": "daegu", "name": "대구광역시청 고시·공고", "group": "대구시·진흥원", "home": "https://www.daegu.go.kr", "boards": [], "login": "불필요", "verified": false},
+
+    {"id": "dgelib", "name": "대구시교육청 공공도서관 통합 (중앙·동부·서부·남부·북부·수성·두류·달성·2.28학생·대봉 등 10곳)", "group": "도서관·교육청", "home": "https://library.daegu.go.kr", "boards": ["https://library.daegu.go.kr"], "login": "불필요 (지원서는 이메일/방문 제출이 많음)", "verified": true},
+    {"id": "dge", "name": "대구광역시교육청 (늘봄·방과후 강사풀)", "group": "도서관·교육청", "home": "https://www.dge.go.kr", "boards": ["https://www.dge.go.kr"], "login": "강사 선정 지원시스템 회원", "verified": true},
+
+    {"id": "dalseo", "name": "달서구 · 달서평생학습관", "group": "구·군 평생학습", "home": "https://www.dalseo.daegu.kr", "boards": ["https://www.dalseo.daegu.kr"], "login": "불필요 (방문 제출)", "verified": true},
+    {"id": "suseong", "name": "수성구 평생학습", "group": "구·군 평생학습", "home": "https://www.suseong.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "buk", "name": "북구 평생학습센터", "group": "구·군 평생학습", "home": "https://www.buk.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "dong", "name": "동구 평생학습", "group": "구·군 평생학습", "home": "https://www.dong.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "jung", "name": "중구 평생학습", "group": "구·군 평생학습", "home": "https://www.jung.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "seo", "name": "서구 평생학습", "group": "구·군 평생학습", "home": "https://www.dgs.go.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "nam", "name": "남구 평생학습", "group": "구·군 평생학습", "home": "https://nam.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
+    {"id": "dalseong", "name": "달성군 평생학습", "group": "구·군 평생학습", "home": "https://www.dalseong.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
+
+    {"id": "sssd", "name": "솜씨당 (원데이클래스 플랫폼)", "group": "클래스 플랫폼·문화센터", "home": "https://www.sssd.co.kr", "boards": [], "login": "호스트(강사) 입점 시 회원", "verified": true},
+    {"id": "moka", "name": "모카플러스 · 더현대 대구 6F (현대어린이책미술관)", "group": "클래스 플랫폼·문화센터", "home": "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do", "boards": [], "login": "불필요", "verified": true},
+    {"id": "hyundai", "name": "현대백화점 문화센터 (더현대 대구)", "group": "클래스 플랫폼·문화센터", "home": "https://www.ehyundai.com/newCulture/CT/CT000000_M.do", "boards": [], "login": "회원", "verified": true},
+    {"id": "shinsegae", "name": "신세계 아카데미 (대구신세계)", "group": "클래스 플랫폼·문화센터", "home": "https://www.shinsegae.com", "boards": [], "login": "회원", "verified": false},
+    {"id": "lotte", "name": "롯데 문화센터 (대구점·상인점)", "group": "클래스 플랫폼·문화센터", "home": "https://culture.lotteshopping.com", "boards": [], "login": "회원", "verified": false}
+  ]
+}

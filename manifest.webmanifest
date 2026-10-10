@@ -1,0 +1,9 @@
+{
+  "name": "대구 강사공고 레이더",
+  "short_name": "강사공고",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f6f3",
+  "theme_color": "#1f5f5b",
+  "lang": "ko"
+}
