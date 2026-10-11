@@ -1,32 +1,277 @@
 {
-  "_note": "모니터링 대상 기관 목록. boards 에 공지/강사모집 게시판 URL 을 넣으면 매주 월요일 자동 점검에 포함됩니다. verified=false 인 URL 은 홈페이지 주소만 확인된 상태라 게시판 주소로 바꿔주는 게 좋습니다.",
-  "keywords": ["강사", "모집", "공모", "강좌개설", "강좌 개설", "개설신청", "프로그램 제안", "강의 제안", "인력풀", "위촉", "시민제안"],
+  "_note": "매주 월요일 자동 점검 대상. boards 는 공고가 실제로 올라오는 게시판 주소입니다.",
+  "keywords": [
+    "강사",
+    "모집",
+    "공모",
+    "강좌개설",
+    "강좌 개설",
+    "개설신청",
+    "프로그램 제안",
+    "강의 제안",
+    "인력풀",
+    "위촉",
+    "시민제안"
+  ],
   "sources": [
-    {"id": "knu", "name": "경북대학교 평생교육원", "group": "대학 평생교육원", "home": "https://lifelong.knu.ac.kr", "boards": ["https://lifelong.knu.ac.kr"], "login": "강좌개설 신청 시 회원 로그인", "verified": true},
-    {"id": "kmu", "name": "계명대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.kmu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "yu", "name": "영남대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.yu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "du", "name": "대구대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.daegu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "cu", "name": "대구가톨릭대학교 평생교육원", "group": "대학 평생교육원", "home": "https://www.cu.ac.kr", "boards": [], "login": "확인 필요", "verified": false},
-
-    {"id": "study", "name": "대구평생학습플랫폼 (대구행복진흥원·대구시민대학)", "group": "대구시·진흥원", "home": "https://study.daegu.kr", "boards": ["https://study.daegu.kr"], "login": "시민제안강의 공모 신청 시 회원", "verified": true},
-    {"id": "daegu", "name": "대구광역시청 고시·공고", "group": "대구시·진흥원", "home": "https://www.daegu.go.kr", "boards": [], "login": "불필요", "verified": false},
-
-    {"id": "dgelib", "name": "대구시교육청 공공도서관 통합 (중앙·동부·서부·남부·북부·수성·두류·달성·2.28학생·대봉 등 10곳)", "group": "도서관·교육청", "home": "https://library.daegu.go.kr", "boards": ["https://library.daegu.go.kr"], "login": "불필요 (지원서는 이메일/방문 제출이 많음)", "verified": true},
-    {"id": "dge", "name": "대구광역시교육청 (늘봄·방과후 강사풀)", "group": "도서관·교육청", "home": "https://www.dge.go.kr", "boards": ["https://www.dge.go.kr"], "login": "강사 선정 지원시스템 회원", "verified": true},
-
-    {"id": "dalseo", "name": "달서구 · 달서평생학습관", "group": "구·군 평생학습", "home": "https://www.dalseo.daegu.kr", "boards": ["https://www.dalseo.daegu.kr"], "login": "불필요 (방문 제출)", "verified": true},
-    {"id": "suseong", "name": "수성구 평생학습", "group": "구·군 평생학습", "home": "https://www.suseong.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "buk", "name": "북구 평생학습센터", "group": "구·군 평생학습", "home": "https://www.buk.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "dong", "name": "동구 평생학습", "group": "구·군 평생학습", "home": "https://www.dong.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "jung", "name": "중구 평생학습", "group": "구·군 평생학습", "home": "https://www.jung.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "seo", "name": "서구 평생학습", "group": "구·군 평생학습", "home": "https://www.dgs.go.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "nam", "name": "남구 평생학습", "group": "구·군 평생학습", "home": "https://nam.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
-    {"id": "dalseong", "name": "달성군 평생학습", "group": "구·군 평생학습", "home": "https://www.dalseong.daegu.kr", "boards": [], "login": "확인 필요", "verified": false},
-
-    {"id": "sssd", "name": "솜씨당 (원데이클래스 플랫폼)", "group": "클래스 플랫폼·문화센터", "home": "https://www.sssd.co.kr", "boards": [], "login": "호스트(강사) 입점 시 회원", "verified": true},
-    {"id": "moka", "name": "모카플러스 · 더현대 대구 6F (현대어린이책미술관)", "group": "클래스 플랫폼·문화센터", "home": "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do", "boards": [], "login": "불필요", "verified": true},
-    {"id": "hyundai", "name": "현대백화점 문화센터 (더현대 대구)", "group": "클래스 플랫폼·문화센터", "home": "https://www.ehyundai.com/newCulture/CT/CT000000_M.do", "boards": [], "login": "회원", "verified": true},
-    {"id": "shinsegae", "name": "신세계 아카데미 (대구신세계)", "group": "클래스 플랫폼·문화센터", "home": "https://www.shinsegae.com", "boards": [], "login": "회원", "verified": false},
-    {"id": "lotte", "name": "롯데 문화센터 (대구점·상인점)", "group": "클래스 플랫폼·문화센터", "home": "https://culture.lotteshopping.com", "boards": [], "login": "회원", "verified": false}
+    {
+      "id": "knu",
+      "name": "경북대학교 평생교육원",
+      "group": "대학 평생교육원",
+      "boards": [
+        "https://lifelong.knu.ac.kr/hmpg/cms/bbsPage/MNU0070091.knu",
+        "https://lifelong.knu.ac.kr/hmpg/cms/subPage/MNU0070069.knu"
+      ],
+      "when": "겨울학기 신규강좌 접수 10월, 1학기 신규강좌 접수 11월 말",
+      "contact": "053-950-6253, 6255",
+      "login": "수강신청만 로그인. 강좌 공모는 방문 접수"
+    },
+    {
+      "id": "yu",
+      "name": "영남대학교 글로벌평생교육원",
+      "group": "대학 평생교육원",
+      "boards": [
+        "https://www.yu.ac.kr/yulife/index.do",
+        "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do"
+      ],
+      "when": "1학기(3월 개강) 12.1~12.7, 2학기 6.1~6.7. 이메일 yulife@yu.ac.kr 로 제출",
+      "contact": "053-810-4965",
+      "login": "불필요"
+    },
+    {
+      "id": "cu",
+      "name": "대구가톨릭대학교 평생교육원",
+      "group": "대학 평생교육원",
+      "boards": [
+        "https://conedu.cu.ac.kr/"
+      ],
+      "when": "정해진 공모 기간 확인 안 됨. 강좌 제안 게시판 상시",
+      "contact": "홈페이지 참고",
+      "login": "강좌 제안 시 확인 필요"
+    },
+    {
+      "id": "du",
+      "name": "대구대학교 평생교육원",
+      "group": "대학 평생교육원",
+      "boards": [
+        "https://lifelong.daegu.ac.kr/main"
+      ],
+      "when": "공모 일정 확인 안 됨",
+      "contact": "053-850-5653",
+      "login": "확인 필요"
+    },
+    {
+      "id": "kmu",
+      "name": "계명대학교 (평생교육·강사채용)",
+      "group": "대학 평생교육원",
+      "boards": [
+        "https://www.kmu.ac.kr/uni/main/page.jsp?mnu_uid=144",
+        "https://www.kmu.ac.kr/uni/mini/pool/main.jsp"
+      ],
+      "when": "평생교육원 강좌 공모는 확인 안 됨. 대학 강사채용은 학기 전",
+      "contact": "053-580-6106",
+      "login": "지원서 등록 시 회원"
+    },
+    {
+      "id": "study",
+      "name": "대구평생교육진흥원 · 대구시민대학",
+      "group": "대구시·진흥원",
+      "boards": [
+        "https://dle.study.daegu.kr/index.do?menu_id=00004232",
+        "https://dle.study.daegu.kr/"
+      ],
+      "when": "하반기 공고 8월 초(2026.8.4), 상반기 공고 2~3월",
+      "contact": "053-210-5684~5",
+      "login": "신청 시 회원"
+    },
+    {
+      "id": "dgulib",
+      "name": "대구통합도서관 (구·군립 도서관 공지 모음)",
+      "group": "도서관·교육청",
+      "boards": [
+        "https://library.daegu.go.kr/dgulib/index.do",
+        "https://library.daegu.go.kr/dalseolib/index.do"
+      ],
+      "when": "도서관마다 수시. 상반기 강사는 11~1월",
+      "contact": "도원도서관 053-667-4840",
+      "login": "불필요"
+    },
+    {
+      "id": "dge",
+      "name": "대구시교육청 늘봄·방과후 강사풀",
+      "group": "도서관·교육청",
+      "boards": [
+        "https://www.dge.go.kr/main/na/ntt/selectNttList.do?mi=1491&bbsId=1046",
+        "https://www.dge.go.kr/afterschool"
+      ],
+      "when": "매년 10~11월. 2027학년도는 11.2 마감, 11.20 발표",
+      "contact": "053-231-0226 (2024 기준)",
+      "login": "센터 회원가입 필요"
+    },
+    {
+      "id": "suseong",
+      "name": "수성구 러닝톡 (평생학습)",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://lll.suseong.kr/index.do?menu_id=00001993",
+        "https://lll.suseong.kr/index.do?menu_id=00001991"
+      ],
+      "when": "강사구인은 수시, 강사등록은 연중. 이메일 lllsuseong@korea.kr",
+      "contact": "053-666-4239",
+      "login": "불필요"
+    },
+    {
+      "id": "buk",
+      "name": "북구 평생학습센터",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://www.buk.daegu.kr/lll",
+        "https://www.buk.daegu.kr/lll/index.do?menu_id=00004135"
+      ],
+      "when": "나도야 강사 2026.4.6~12.31 접수 중",
+      "contact": "053-665-2714",
+      "login": "네이버 밴드 가입 후 신청"
+    },
+    {
+      "id": "dong",
+      "name": "동구 평생학습센터",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://80edu.dong.daegu.kr/lifelong_edu_network1.php",
+        "https://www.dong.daegu.kr/80edu/lifelong_edu_network2.php"
+      ],
+      "when": "강사 인력풀 상시 등록",
+      "contact": "053-662-4331~3",
+      "login": "확인 필요"
+    },
+    {
+      "id": "nam",
+      "name": "남구 평생학습관",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://nam.daegu.kr/lll/main.do",
+        "https://nam.daegu.kr/lll/board/list.do?a_num=42522953"
+      ],
+      "when": "강사은행 상시",
+      "contact": "053-664-2309",
+      "login": "확인 필요"
+    },
+    {
+      "id": "seo",
+      "name": "서구 평생학습센터",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://www.dgs.go.kr/portal/board/post/list.do?bcIdx=502&mid=0401040200",
+        "https://www.dgs.go.kr/dgs/lifeedu/page.php?mnu_uid=10774"
+      ],
+      "when": "수시",
+      "contact": "서구청",
+      "login": "확인 필요"
+    },
+    {
+      "id": "dalseo",
+      "name": "달서구 · 달서평생학습관",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://edu.dalseo.daegu.kr/lll/index.do",
+        "https://www.dalseo.daegu.kr/index.do?menu_id=00002371"
+      ],
+      "when": "정규강사 연 1회 9월 (2027년도분 9.14~16 마감)",
+      "contact": "053-667-3216",
+      "login": "불필요"
+    },
+    {
+      "id": "dalseong",
+      "name": "달성군",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://www.dalseong.daegu.kr/index.do?menu_id=00002870"
+      ],
+      "when": "수시",
+      "contact": "달성군청",
+      "login": "불필요"
+    },
+    {
+      "id": "jung",
+      "name": "중구",
+      "group": "구·군 평생학습",
+      "boards": [
+        "https://www.jung.daegu.kr"
+      ],
+      "when": "평생학습 강사 게시판 확인 안 됨",
+      "contact": "053-661-2000",
+      "login": "불필요"
+    },
+    {
+      "id": "mocha",
+      "name": "모카클래스 (기업 출강 매칭)",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://b2b.mochaclass.com/",
+        "https://mochaclass.com/HostInfo"
+      ],
+      "when": "상시. 연말 워크숍·송년회 수요가 11~12월에 몰림",
+      "contact": "채널톡 mochaclass.channel.io/lounge",
+      "login": "호스트 회원"
+    },
+    {
+      "id": "sssd",
+      "name": "솜씨당",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://www.sssd.co.kr/main/host/welcome",
+        "https://www.sssd.co.kr/host"
+      ],
+      "when": "상시. 서류 없이 무료 등록",
+      "contact": "사이트 내 문의",
+      "login": "작가 회원"
+    },
+    {
+      "id": "moka",
+      "name": "모카플러스 · 더현대 대구 6F",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do",
+        "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005"
+      ],
+      "when": "프로그램 시즌별",
+      "contact": "더현대 대구",
+      "login": "회원"
+    },
+    {
+      "id": "hyundai",
+      "name": "현대백화점 문화센터 (더현대 대구)",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://www.ehyundai.com/newCulture/CT/CT050200_V.do?bbsCd=600000003&branchCd=&classfyCd=21&search=all&keyword=&seq=2077507",
+        "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005"
+      ],
+      "when": "상시. 학기 시작 약 한 달 전 라인업 확정",
+      "contact": "지점 문화센터",
+      "login": "회원 로그인 필요"
+    },
+    {
+      "id": "lotte",
+      "name": "롯데문화센터 (대구점·상인점)",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://culture.lotteshopping.com/community/notice/view.do?notcSeqno=950",
+        "https://culture.lotteshopping.com/information/application/index.do"
+      ],
+      "when": "학기 3·6·9·12월 개강, 접수 1·4·7·10월. 강좌 제안은 접수 전",
+      "contact": "지점 문화센터",
+      "login": "회원"
+    },
+    {
+      "id": "shinsegae",
+      "name": "신세계 아카데미 (대구신세계)",
+      "group": "클래스 플랫폼·문화센터",
+      "boards": [
+        "https://www.shinsegae.com"
+      ],
+      "when": "강사 지원 경로 확인 안 됨",
+      "contact": "대구신세계 아카데미",
+      "login": "회원"
+    }
   ]
 }

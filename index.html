@@ -98,7 +98,16 @@ nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(-
 .note { margin: 0; font-size: 14px; color: var(--ink); }
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
 .files { margin: 0; padding: 0; list-style: none; font-size: 13px; display: grid; gap: 2px; }
-.files li::before { content: "첨부 · "; color: var(--muted); font-family: var(--f-mono); font-size: 11px; }
+.files li { padding-left: 14px; position: relative; }
+.files li::before { content: "·"; position: absolute; left: 3px; color: var(--muted); }
+.files li.dl::before { content: "↓"; left: 0; color: var(--accent); font-family: var(--f-mono); font-size: 12px; }
+.docs { display: grid; gap: 4px; border-top: 1px dashed var(--line); padding-top: 8px; }
+.links a.go { font-weight: 600; }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 4px; }
+.btn { font: 500 13px var(--f-body); text-decoration: none; background: var(--accent); color: var(--surface); border-radius: 4px; padding: 5px 10px; }
+.btn.alt { background: var(--accent-soft); color: var(--accent); }
+.site .sub b { font-weight: 600; color: var(--ink); }
+.s-예정 { background: var(--warn-soft); color: var(--warn); }
 .empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
 
 .timeline { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; }
@@ -121,7 +130,7 @@ nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(-
 .site + .site { border-top: 1px solid var(--line); }
 .site input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--accent); }
 .site .nm { font-weight: 500; }
-.site .sub { grid-column: 2; font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.site .sub { grid-column: 2; font-size: 13px; color: var(--muted); display: grid; gap: 3px; min-width: 0; }
 .unverified { color: var(--warn); }
 
 form { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px; display: grid; gap: 12px; }
@@ -146,7 +155,7 @@ textarea { min-height: 70px; resize: vertical; }
   <header>
     <span class="eyebrow" id="today"></span>
     <h1>대구 강사공고 레이더</h1>
-    <p class="lede">대구 평생교육원·도서관·구청·문화센터·클래스 플랫폼 22곳의 강사모집과 강좌개설 공고를 한곳에 모았습니다. 마감일 기준 D-day, 공고 링크, 첨부파일을 같이 보여줍니다.</p>
+    <p class="lede">대구 평생교육원·도서관·구청·문화센터·출강 플랫폼의 강사모집과 강좌개설 공고를 모았습니다. 링크는 공고가 실제로 올라오는 게시판과 지원 페이지로 바로 연결되고, 제출 양식도 함께 보여줍니다.</p>
   </header>
 
   <section class="summary" aria-label="요약">
@@ -176,7 +185,7 @@ textarea { min-height: 70px; resize: vertical; }
   </section>
 
   <section id="panel-sites" role="tabpanel" aria-labelledby="tab-sites" class="list" hidden>
-    <p class="note">월요일마다 아래 기관을 돌며 확인합니다. 체크는 이번 주에만 유지되고 다음 월요일에 초기화됩니다. <span class="unverified">주소 확인 필요</span> 표시는 홈페이지만 확인된 곳이라 평생교육 게시판 주소로 바꿔야 합니다.</p>
+    <p class="note">월요일마다 위에서부터 눌러보세요. 첫 번째 버튼이 공고가 올라오는 게시판, 두 번째가 지원·등록 페이지입니다. ↓ 표시는 바로 받을 수 있는 양식이고, 점만 있는 항목은 공고에 첨부되는 서류입니다. 체크는 이번 주에만 유지됩니다.</p>
     <div id="siteGroups" class="list"></div>
   </section>
 
@@ -208,91 +217,201 @@ textarea { min-height: 70px; resize: vertical; }
 <script>
 const TODAY = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); })();
 
+/* 2026-10-11 조사. board = 공고가 실제로 올라오는 게시판, apply = 지원/등록 페이지, forms = 양식(링크가 있으면 직접 받기). */
 const SOURCES = [
-  { id: "knu", name: "경북대학교 평생교육원", group: "대학 평생교육원", home: "https://lifelong.knu.ac.kr", login: "강좌개설 신청 시 회원 로그인", verified: true },
-  { id: "kmu", name: "계명대학교 평생교육원", group: "대학 평생교육원", home: "https://www.kmu.ac.kr", login: "확인 필요", verified: false },
-  { id: "yu", name: "영남대학교 평생교육원", group: "대학 평생교육원", home: "https://www.yu.ac.kr", login: "확인 필요", verified: false },
-  { id: "du", name: "대구대학교 평생교육원", group: "대학 평생교육원", home: "https://www.daegu.ac.kr", login: "확인 필요", verified: false },
-  { id: "cu", name: "대구가톨릭대학교 평생교육원", group: "대학 평생교육원", home: "https://www.cu.ac.kr", login: "확인 필요", verified: false },
-  { id: "study", name: "대구평생학습플랫폼 (대구행복진흥원·시민대학)", group: "대구시·진흥원", home: "https://study.daegu.kr", login: "시민제안강의 공모 시 회원", verified: true },
-  { id: "daegu", name: "대구광역시청 고시·공고", group: "대구시·진흥원", home: "https://www.daegu.go.kr", login: "불필요", verified: false },
-  { id: "dgelib", name: "대구시교육청 공공도서관 10곳 (통합 홈페이지)", group: "도서관·교육청", home: "https://library.daegu.go.kr", login: "불필요", verified: true },
-  { id: "dge", name: "대구광역시교육청 (늘봄·방과후 강사풀)", group: "도서관·교육청", home: "https://www.dge.go.kr", login: "강사 선정 지원시스템 회원", verified: true },
-  { id: "dalseo", name: "달서구 · 달서평생학습관", group: "구·군 평생학습", home: "https://www.dalseo.daegu.kr", login: "불필요 (방문 제출)", verified: true },
-  { id: "suseong", name: "수성구 평생학습", group: "구·군 평생학습", home: "https://www.suseong.kr", login: "확인 필요", verified: false },
-  { id: "buk", name: "북구 평생학습센터", group: "구·군 평생학습", home: "https://www.buk.daegu.kr", login: "확인 필요", verified: false },
-  { id: "dong", name: "동구 평생학습", group: "구·군 평생학습", home: "https://www.dong.daegu.kr", login: "확인 필요", verified: false },
-  { id: "jung", name: "중구 평생학습", group: "구·군 평생학습", home: "https://www.jung.daegu.kr", login: "확인 필요", verified: false },
-  { id: "seo", name: "서구 평생학습", group: "구·군 평생학습", home: "https://www.dgs.go.kr", login: "확인 필요", verified: false },
-  { id: "nam", name: "남구 평생학습", group: "구·군 평생학습", home: "https://nam.daegu.kr", login: "확인 필요", verified: false },
-  { id: "dalseong", name: "달성군 평생학습", group: "구·군 평생학습", home: "https://www.dalseong.daegu.kr", login: "확인 필요", verified: false },
-  { id: "sssd", name: "솜씨당 (원데이클래스 플랫폼)", group: "클래스 플랫폼·문화센터", home: "https://www.sssd.co.kr", login: "호스트 입점 시 회원", verified: true },
-  { id: "moka", name: "모카플러스 · 더현대 대구 6F", group: "클래스 플랫폼·문화센터", home: "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do", login: "불필요", verified: true },
-  { id: "hyundai", name: "현대백화점 문화센터 (더현대 대구)", group: "클래스 플랫폼·문화센터", home: "https://www.ehyundai.com/newCulture/CT/CT000000_M.do", login: "회원", verified: true },
-  { id: "shinsegae", name: "신세계 아카데미 (대구신세계)", group: "클래스 플랫폼·문화센터", home: "https://www.shinsegae.com", login: "회원", verified: false },
-  { id: "lotte", name: "롯데 문화센터 (대구점·상인점)", group: "클래스 플랫폼·문화센터", home: "https://culture.lotteshopping.com", login: "회원", verified: false },
+  { id: "knu", name: "경북대학교 평생교육원", group: "대학 평생교육원",
+    board: "https://lifelong.knu.ac.kr/hmpg/cms/bbsPage/MNU0070091.knu", boardLabel: "공지사항",
+    apply: "https://lifelong.knu.ac.kr/hmpg/cms/subPage/MNU0070069.knu", applyLabel: "학사일정 (신규강좌 접수 시기)",
+    forms: [{ name: "강좌개설신청서 (평생교육원 양식)" }, { name: "강의계획서 (평생교육원 양식)" }, { name: "강사이력서·추천서 (평생교육원 양식)" }, { name: "강사 준수사항 (평생교육원 양식)" }, { name: "최종학력증명서, 경력증명서" }],
+    when: "겨울학기 신규강좌 접수 10월, 1학기 신규강좌 접수 11월 말", contact: "053-950-6253, 6255", login: "수강신청만 로그인. 강좌 공모는 방문 접수" },
+  { id: "yu", name: "영남대학교 글로벌평생교육원", group: "대학 평생교육원",
+    board: "https://www.yu.ac.kr/yulife/index.do", boardLabel: "평생교육원 홈",
+    apply: "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do", applyLabel: "강좌제안 (양식 다운로드)",
+    forms: [{ name: "강좌제안서 양식", url: "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do" }],
+    when: "1학기(3월 개강) 12.1~12.7, 2학기 6.1~6.7. 이메일 yulife@yu.ac.kr 로 제출", contact: "053-810-4965", login: "불필요" },
+  { id: "cu", name: "대구가톨릭대학교 평생교육원", group: "대학 평생교육원",
+    board: "https://conedu.cu.ac.kr/", boardLabel: "평생교육원 홈 (공지사항·강좌 제안·양식자료실)",
+    apply: "https://conedu.cu.ac.kr/", applyLabel: "강좌 제안 메뉴",
+    forms: [{ name: "평생교육원 강좌 개설 및 수업 운영 기준 (PDF, 2025.8)", url: "https://conedu.cu.ac.kr/inc/sub.php?menu_cd=10&class_cd=10&mode=Read&serial_no=202508210001&pageNum=5&left=1&program=board" }, { name: "강좌 제안 양식 (양식자료실)" }],
+    when: "정해진 공모 기간 확인 안 됨. 강좌 제안 게시판 상시", contact: "홈페이지 참고", login: "강좌 제안 시 확인 필요" },
+  { id: "du", name: "대구대학교 평생교육원", group: "대학 평생교육원",
+    board: "https://lifelong.daegu.ac.kr/main", boardLabel: "평생교육원 홈",
+    apply: "https://lifelong.daegu.ac.kr/main", applyLabel: "공지사항 확인",
+    forms: [], when: "공모 일정 확인 안 됨", contact: "053-850-5653", login: "확인 필요" },
+  { id: "kmu", name: "계명대학교 (평생교육·강사채용)", group: "대학 평생교육원",
+    board: "https://www.kmu.ac.kr/uni/main/page.jsp?mnu_uid=144", boardLabel: "공지사항",
+    apply: "https://www.kmu.ac.kr/uni/mini/pool/main.jsp", applyLabel: "강사채용 홈페이지 (지원서 등록)",
+    forms: [], when: "평생교육원 강좌 공모는 확인 안 됨. 대학 강사채용은 학기 전", contact: "053-580-6106", login: "지원서 등록 시 회원" },
+
+  { id: "study", name: "대구평생교육진흥원 · 대구시민대학", group: "대구시·진흥원",
+    board: "https://dle.study.daegu.kr/index.do?menu_id=00004232", boardLabel: "공지사항 (시민강사 모집 공고 게시판)",
+    apply: "https://dle.study.daegu.kr/", applyLabel: "대구평생학습플랫폼",
+    forms: [{ name: "공고문 (PDF)" }, { name: "서식1 시민제안강의 개설 신청서" }, { name: "서식2 기획강의 개설 신청서" }],
+    when: "하반기 공고 8월 초(2026.8.4), 상반기 공고 2~3월", contact: "053-210-5684~5", login: "신청 시 회원" },
+
+  { id: "dgulib", name: "대구통합도서관 (구·군립 도서관 공지 모음)", group: "도서관·교육청",
+    board: "https://library.daegu.go.kr/dgulib/index.do", boardLabel: "메인 공지 목록",
+    apply: "https://library.daegu.go.kr/dalseolib/index.do", applyLabel: "달서구통합도서관",
+    forms: [], when: "도서관마다 수시. 상반기 강사는 11~1월", contact: "도원도서관 053-667-4840", login: "불필요" },
+  { id: "dge", name: "대구시교육청 늘봄·방과후 강사풀", group: "도서관·교육청",
+    board: "https://www.dge.go.kr/main/na/ntt/selectNttList.do?mi=1491&bbsId=1046", boardLabel: "교육청 채용 게시판",
+    apply: "https://www.dge.go.kr/afterschool", applyLabel: "대구늘봄학교지원센터 · 강사선정지원시스템",
+    forms: [{ name: "프로그램 운영 제안서 (시스템에서 작성)" }, { name: "증빙서류 (자격증·경력)" }],
+    when: "매년 10~11월. 2027학년도는 11.2 마감, 11.20 발표", contact: "053-231-0226 (2024 기준)", login: "센터 회원가입 필요" },
+
+  { id: "suseong", name: "수성구 러닝톡 (평생학습)", group: "구·군 평생학습",
+    board: "https://lll.suseong.kr/index.do?menu_id=00001993", boardLabel: "강사구인 게시판",
+    apply: "https://lll.suseong.kr/index.do?menu_id=00001991", applyLabel: "평생교육강사 등록안내 (연중 접수)",
+    forms: [{ name: "강사등록 신청서 (등록안내 페이지)", url: "https://lll.suseong.kr/index.do?menu_id=00001991" }],
+    when: "강사구인은 수시, 강사등록은 연중. 이메일 lllsuseong@korea.kr", contact: "053-666-4239", login: "불필요" },
+  { id: "buk", name: "북구 평생학습센터", group: "구·군 평생학습",
+    board: "https://www.buk.daegu.kr/lll", boardLabel: "평생학습센터",
+    apply: "https://www.buk.daegu.kr/lll/index.do?menu_id=00004135", applyLabel: "나도야, 강사 (주민강사 신청)",
+    forms: [], when: "나도야 강사 2026.4.6~12.31 접수 중", contact: "053-665-2714", login: "네이버 밴드 가입 후 신청" },
+  { id: "dong", name: "동구 평생학습센터", group: "구·군 평생학습",
+    board: "https://80edu.dong.daegu.kr/lifelong_edu_network1.php", boardLabel: "평생학습센터",
+    apply: "https://www.dong.daegu.kr/80edu/lifelong_edu_network2.php", applyLabel: "평생학습 강사 · 강사등록 신청",
+    forms: [{ name: "강사등록 신청서" }, { name: "강좌 운영 계획서 (배정 후)" }],
+    when: "강사 인력풀 상시 등록", contact: "053-662-4331~3", login: "확인 필요" },
+  { id: "nam", name: "남구 평생학습관", group: "구·군 평생학습",
+    board: "https://nam.daegu.kr/lll/main.do", boardLabel: "평생학습관",
+    apply: "https://nam.daegu.kr/lll/board/list.do?a_num=42522953", applyLabel: "강사은행 · 강사등록현황",
+    forms: [], when: "강사은행 상시", contact: "053-664-2309", login: "확인 필요" },
+  { id: "seo", name: "서구 평생학습센터", group: "구·군 평생학습",
+    board: "https://www.dgs.go.kr/portal/board/post/list.do?bcIdx=502&mid=0401040200", boardLabel: "평생학습 공지사항",
+    apply: "https://www.dgs.go.kr/dgs/lifeedu/page.php?mnu_uid=10774", applyLabel: "평생학습기관 커뮤니티",
+    forms: [], when: "수시", contact: "서구청", login: "확인 필요" },
+  { id: "dalseo", name: "달서구 · 달서평생학습관", group: "구·군 평생학습",
+    board: "https://edu.dalseo.daegu.kr/lll/index.do", boardLabel: "달서평생학습플랫폼",
+    apply: "https://www.dalseo.daegu.kr/index.do?menu_id=00002371", applyLabel: "사업 및 공모개요",
+    forms: [{ name: "정규강좌 강사 지원서 (구청 홈페이지, 방문 제출)" }],
+    when: "정규강사 연 1회 9월 (2027년도분 9.14~16 마감)", contact: "053-667-3216", login: "불필요" },
+  { id: "dalseong", name: "달성군", group: "구·군 평생학습",
+    board: "https://www.dalseong.daegu.kr/index.do?menu_id=00002870", boardLabel: "채용 공고",
+    apply: "https://www.dalseong.daegu.kr/index.do?menu_id=00002870", applyLabel: "채용 공고",
+    forms: [], when: "수시", contact: "달성군청", login: "불필요" },
+  { id: "jung", name: "중구", group: "구·군 평생학습",
+    board: "https://www.jung.daegu.kr", boardLabel: "구청 홈페이지",
+    apply: "https://www.jung.daegu.kr", applyLabel: "고시·공고 확인",
+    forms: [], when: "평생학습 강사 게시판 확인 안 됨", contact: "053-661-2000", login: "불필요" },
+
+  { id: "mocha", name: "모카클래스 (기업 출강 매칭)", group: "클래스 플랫폼·문화센터",
+    board: "https://b2b.mochaclass.com/", boardLabel: "B2B 단체·출강 클래스",
+    apply: "https://mochaclass.com/HostInfo", applyLabel: "호스트 센터 (강사 등록)",
+    forms: [], when: "상시. 연말 워크숍·송년회 수요가 11~12월에 몰림", contact: "채널톡 mochaclass.channel.io/lounge", login: "호스트 회원" },
+  { id: "sssd", name: "솜씨당", group: "클래스 플랫폼·문화센터",
+    board: "https://www.sssd.co.kr/main/host/welcome", boardLabel: "작가 등록 안내 (기업 단체 클래스 입점 포함)",
+    apply: "https://www.sssd.co.kr/host", applyLabel: "작가 로그인·가입",
+    forms: [{ name: "솜씨당 작가 페이지 가이드 (PDF)", url: "https://s3.ap-northeast-2.amazonaws.com/sssdcimage/etc/sssd_guide.pdf" }],
+    when: "상시. 서류 없이 무료 등록", contact: "사이트 내 문의", login: "작가 회원" },
+  { id: "moka", name: "모카플러스 · 더현대 대구 6F", group: "클래스 플랫폼·문화센터",
+    board: "https://www.ehyundai.com/mobile/branch/DP/MP000000_V.do", boardLabel: "모카플러스 안내",
+    apply: "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005", applyLabel: "강사지원·제휴 문의",
+    forms: [], when: "프로그램 시즌별", contact: "더현대 대구", login: "회원" },
+  { id: "hyundai", name: "현대백화점 문화센터 (더현대 대구)", group: "클래스 플랫폼·문화센터",
+    board: "https://www.ehyundai.com/newCulture/CT/CT050200_V.do?bbsCd=600000003&branchCd=&classfyCd=21&search=all&keyword=&seq=2077507", boardLabel: "문화센터 소식",
+    apply: "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005", applyLabel: "온라인 강사지원 (로그인 > 문화센터 > 이용안내)",
+    forms: [{ name: "강좌제안서" }, { name: "이력서" }],
+    when: "상시. 학기 시작 약 한 달 전 라인업 확정", contact: "지점 문화센터", login: "회원 로그인 필요" },
+  { id: "lotte", name: "롯데문화센터 (대구점·상인점)", group: "클래스 플랫폼·문화센터",
+    board: "https://culture.lotteshopping.com/community/notice/view.do?notcSeqno=950", boardLabel: "공지사항",
+    apply: "https://culture.lotteshopping.com/information/application/index.do", applyLabel: "강사지원·제휴신청",
+    forms: [], when: "학기 3·6·9·12월 개강, 접수 1·4·7·10월. 강좌 제안은 접수 전", contact: "지점 문화센터", login: "회원" },
+  { id: "shinsegae", name: "신세계 아카데미 (대구신세계)", group: "클래스 플랫폼·문화센터",
+    board: "https://www.shinsegae.com", boardLabel: "신세계백화점",
+    apply: "https://www.shinsegae.com", applyLabel: "아카데미 메뉴에서 확인",
+    forms: [], when: "강사 지원 경로 확인 안 됨", contact: "대구신세계 아카데미", login: "회원" },
 ];
 const SRC = Object.fromEntries(SOURCES.map(s => [s.id, s]));
 
-/* 2026-10-10 조사 결과. ref 는 근거 기사/문서, link 는 원 공고를 찾을 곳. */
 const NOTICES = [
   { id: "dge-neulbom-2027", src: "dge", type: "강사모집", status: "진행중",
-    title: "2027학년도 늘봄·방과후학교 강사 인력풀 모집",
+    title: "2027학년도 늘봄·방과후학교 프로그램 강사풀 모집",
     open: "2026-10-06", deadline: "2026-11-02",
-    link: "https://www.dge.go.kr",
-    ref: [["아시아경제 보도 (2026.10.06)", "https://view.asiae.co.kr/article/2026100611212164274"]],
-    files: [],
-    note: "지금 접수 중입니다. 공고문·지원서 양식은 교육청 공고 원문에 첨부돼 있습니다. 작년(2026학년도)은 11월 30일 마감, 12월 중순 발표였습니다." },
+    link: "https://www.dge.go.kr/afterschool", linkLabel: "대구늘봄학교지원센터 (접수)",
+    ref: [["누리일보 보도", "https://www.nuriilbo.com/news/article.html?no=920194"], ["아시아경제 보도", "https://view.asiae.co.kr/article/2026100611212164274"]],
+    docs: ["프로그램 운영 제안서 (강사선정지원시스템에서 작성)", "관련 증빙서류 (자격증·경력)"],
+    note: "센터 누리집 회원가입 → 강사선정지원시스템에 운영 제안서와 증빙 제출. 작년 등록자도 제안서가 초기화되니 새로 내야 합니다. 결과 발표 11월 20일." },
+  { id: "dowon-2026", src: "dgulib", type: "강사모집", status: "진행중",
+    title: "달서구립도원도서관 문화강좌 및 북스타트 강사 공개모집",
+    open: "2026-10-10", deadline: null,
+    link: "https://library.daegu.go.kr/dgulib/index.do", linkLabel: "대구통합도서관 메인 공지 목록 (10.10 게시)",
+    ref: [["달서구통합도서관 문화강좌", "https://library.daegu.go.kr/dalseolib/html.do?menu_idx=91"], ["북스타트 안내", "https://library.daegu.go.kr/dalseolib/html.do?menu_idx=94"]],
+    docs: ["지원서·강의계획서 (공고 첨부 확인)"],
+    note: "어제 올라온 공고입니다. 마감일·서류는 검색으로 확인 못 해서 원문에서 바로 확인하세요. 문의 도원도서관 053-667-4840." },
+  { id: "buk-nadoya", src: "buk", type: "강사모집", status: "진행중",
+    title: "북구 평생학습 '나도야, 강사' 주민강사 모집 (원데이 특강)",
+    open: "2026-04-06", deadline: "2026-12-31",
+    link: "https://www.buk.daegu.kr/lll/index.do?menu_id=00004135", linkLabel: "나도야, 강사 페이지",
+    ref: [],
+    docs: ["네이버 밴드 '나도야, 강사' 가입·등록 후 홈페이지 또는 방문 신청"],
+    note: "북구 주민 대상. 1회 최대 3시간 특강. 문의 053-665-2714." },
+  { id: "yu-2027-1", src: "yu", type: "강좌개설", status: "예정",
+    title: "영남대 글로벌평생교육원 2027학년도 1학기 강좌제안 접수",
+    open: "2026-12-01", deadline: "2026-12-07",
+    link: "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do", linkLabel: "강좌제안 페이지 (양식 다운로드)",
+    ref: [],
+    files: [{ name: "강좌제안서 양식 (페이지 하단 다운로드)", url: "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do" }],
+    note: "양식 작성 후 yulife@yu.ac.kr 로 메일 제출. 채택 시 개별 연락. 문의 053-810-4965." },
+  { id: "knu-2027-1", src: "knu", type: "강좌개설", status: "예정",
+    title: "경북대 평생교육원 2027학년도 1학기 신규강좌 접수",
+    open: "2026-11-20", deadline: "2026-11-30",
+    link: "https://lifelong.knu.ac.kr/hmpg/cms/bbsPage/MNU0070091.knu", linkLabel: "공지사항 게시판",
+    ref: [["학사일정 (11월 말 1학기 신규강좌 접수)", "https://lifelong.knu.ac.kr/hmpg/cms/subPage/MNU0070069.knu"]],
+    docs: ["강좌개설신청서", "강의계획서", "강사이력서(추천서)", "강사 준수사항", "최종학력증명서", "경력증명서·연구실적 (해당자)"],
+    note: "학사일정상 11월 말 접수입니다. 정확한 날짜는 공지사항에 올라옵니다. 이전 공모는 방문 접수 → 서류심사 → 면접 → 운영위원회 심의 순이었습니다. 겨울학기 신규강좌 접수(10월)도 지금 공지사항에서 확인하세요." },
+  { id: "sssd-host", src: "sssd", type: "강좌개설", status: "상시",
+    title: "솜씨당 작가 등록 · 기업 단체 클래스 입점",
+    open: null, deadline: null,
+    link: "https://www.sssd.co.kr/main/host/welcome", linkLabel: "작가 등록 안내",
+    ref: [],
+    files: [{ name: "솜씨당 작가 페이지 가이드 (PDF)", url: "https://s3.ap-northeast-2.amazonaws.com/sssdcimage/etc/sssd_guide.pdf" }],
+    note: "서류 없이 무료 등록. 지방 클래스는 제목 앞에 [대구] 표기. 겨울 수요는 11월 안에 등록해 두세요." },
+  { id: "mocha-host", src: "mocha", type: "강사모집", status: "상시",
+    title: "모카클래스 기업 출강 강사(호스트) 등록",
+    open: null, deadline: null,
+    link: "https://mochaclass.com/HostInfo", linkLabel: "호스트 센터",
+    ref: [["B2B 단체·출강 클래스", "https://b2b.mochaclass.com/"], ["출강 가능한 단체 클래스 예시", "https://mochaclass.com/blog/onsite-instructor-class-collection-guide"]],
+    docs: ["클래스 소개·커리큘럼", "출강 가능 지역·인원·견적"],
+    note: "기업 워크숍·송년회 출강 수요가 11~12월에 몰립니다. 문의는 채널톡 mochaclass.channel.io/lounge." },
   { id: "dalseo-2027", src: "dalseo", type: "강사모집", status: "마감",
     title: "달서평생학습관 2027년도 정규강좌 강사 35명 공개모집",
     open: "2026-09-14", deadline: "2026-09-16",
-    link: "https://www.dalseo.daegu.kr",
-    ref: [["아시아경제 (2026.09.09)", "https://view.asiae.co.kr/article/2026090909592514769"], ["한국사회복지저널", "https://www.ksw-news.com/news/articleView.html?idxno=3033109"]],
-    files: [],
-    note: "어학·음악·미술·디지털·생활체육·요리·차·식물·공예·교양 등 9분야 50강좌. 구청 홈페이지에서 지원서를 받아 방문 제출, 서류 후 면접, 2027.1~12 위촉. 다음 모집은 2027년 9월로 예상합니다." },
-  { id: "study-2026h2", src: "study", type: "수강생모집", status: "참고",
-    title: "2026 하반기 대구시민대학 (26개 강좌, 10.1~12.4 운영)",
-    open: "2026-09-07", deadline: null,
-    link: "https://study.daegu.kr",
-    ref: [["경북매일 (2026.09.07)", "https://kbmaeil.com/article/20260907500319"]],
-    files: [],
-    note: "시민제안강의 23개는 공모로 이미 선정됐습니다. 강사로 들어가려면 다음 상반기 시민제안강의 공모를 노려야 합니다(예상 일정 탭)." },
-  { id: "dgelib-2026h2", src: "dgelib", type: "수강생모집", status: "참고",
-    title: "대구시교육청 공공도서관 10곳 2026 하반기 평생교육 프로그램 190개",
+    link: "https://www.dalseo.daegu.kr/index.do?menu_id=00002371", linkLabel: "달서구 공모개요",
+    ref: [["아시아경제 (2026.09.09)", "https://view.asiae.co.kr/article/2026090909592514769"]],
+    docs: ["지원서 (구청 홈페이지에서 내려받아 방문 제출)"],
+    note: "마감. 다음 모집은 2027년 9월 예상." },
+  { id: "study-2026h2", src: "study", type: "강사모집", status: "마감",
+    title: "2026 대구시민대학 하반기 시민강사 모집 및 강의개설 신청",
     open: "2026-08-04", deadline: null,
-    link: "https://library.daegu.go.kr",
-    ref: [["경북매일 (2026.08.04)", "https://www.kbmaeil.com/article/20260804500512"]],
-    files: [],
-    note: "8~12월 운영 중. 2027 상반기 프로그램 강사 모집은 12~1월 공지로 예상합니다." },
-  { id: "sssd-host", src: "sssd", type: "강좌개설", status: "상시",
-    title: "솜씨당 호스트(클래스 개설) 입점 신청",
-    open: null, deadline: null,
-    link: "https://www.sssd.co.kr", ref: [], files: [],
-    note: "마감 없는 상시 입점입니다. 겨울 시즌 클래스는 11월 안에 등록해 두면 12월 수요를 잡기 좋습니다." },
+    link: "https://dle.study.daegu.kr/index.do?menu_id=00004232", linkLabel: "공지사항 게시판",
+    ref: [],
+    docs: ["공고문 (PDF)", "서식1 시민제안강의 개설 신청서", "서식2 기획강의 개설 신청서"],
+    note: "9월 1일 선정 결과 발표로 끝났습니다. 상반기 공고(2~3월)에 같은 서식으로 다시 열립니다. 게시판에서 작년 공고를 열면 서식을 미리 받아둘 수 있습니다." },
 ];
 
-/* 예상 일정. conf: 높음/중간/낮음. live=true 는 이미 열린 것이 확인된 항목. */
+/* 예상 일정. conf: 높음(공식 일정)/중간(작년 실적)/낮음(일반 패턴). live=true 는 접수 중 확인. */
 const FORECAST = [
-  { src: "dge", short: "교육청 늘봄 강사풀", title: "늘봄·방과후 강사 인력풀 (2027학년도)", start: "2026-10-06", end: "2026-11-02", conf: "높음", live: true,
-    basis: "2026.10.06 보도로 접수 확인. 작년은 11월 말까지 온라인 접수." },
-  { src: "knu", short: "경북대 겨울학기", title: "경북대 평생교육원 겨울학기 강좌개설·강사 모집", start: "2026-10-12", end: "2026-11-06", conf: "중간",
-    basis: "평생교육원 학사업무편람: 겨울학기 모집공고 10월, 접수 10월 말, 심사·결정 11월 초. 지금이 공고 시점입니다.",
-    ref: ["학사업무편람 (경북대 평생교육원)", "https://lifelong.knu.ac.kr/public/lfldc/downloadfile/202203300515226073mzy6tgrww37n"] },
-  { src: "hyundai", short: "현대 문화센터", title: "현대백화점 문화센터 겨울학기 회원모집 (더현대 대구)", start: "2026-10-19", end: "2026-11-30", conf: "높음",
-    basis: "작년 겨울학기는 10월 21일 회원모집 시작, 12.1~2.28 운영. 겨울 강좌 라인업은 이미 확정 단계라 강사 제안은 봄학기(3월) 대상으로 12~1월에 넣는 게 맞습니다.",
-    ref: ["헤럴드경제 (2025.10.19)", "https://www.heraldk.com/article/2025101921204728928"] },
-  { src: "shinsegae", short: "신세계·롯데", title: "신세계·롯데 문화센터 겨울학기 회원모집", start: "2026-10-20", end: "2026-11-30", conf: "낮음",
-    basis: "백화점 문화센터는 학기 시작 약 한 달 전에 라인업을 공개합니다. 강사 제안은 상시 접수가 일반적입니다." },
-  { src: "moka", short: "모카플러스", title: "모카플러스 겨울방학 프로그램 공지", start: "2026-11-01", end: "2026-12-15", conf: "낮음",
-    basis: "어린이책미술관 전시·교육 공간이라 정기 강사 공모는 확인되지 않았습니다. 겨울방학 프로그램이 11월쯤 공지되면 협업 제안 시점으로 보세요." },
-  { src: "knu", short: "대학 봄학기 개설", title: "대학 평생교육원 2027 봄학기 신규강좌 개설 신청 (경북대·계명대·영남대 등)", start: "2026-11-01", end: "2026-12-20", conf: "낮음",
-    basis: "경북대 편람상 신규강좌 공모는 11월. 다른 대학도 봄학기 2~3개월 전에 받는 경우가 많습니다." },
-  { src: "dgelib", short: "공공도서관", title: "공공도서관 겨울방학 특강 · 2027 상반기 강사 모집", start: "2026-11-10", end: "2027-01-20", conf: "낮음",
-    basis: "하반기 프로그램이 8월 발표·12월 종료, 상반기는 3월 시작이라 강사 공고는 12~1월로 추정합니다." },
-  { src: "suseong", short: "구·군 평생학습", title: "구·군 평생학습센터 2027 상반기 강사 공모 (수성·북·동·중·서·남·달성)", start: "2026-11-15", end: "2027-01-31", conf: "낮음",
-    basis: "달서구는 9월에 연간 정규강사를 뽑았습니다(종료). 나머지 구·군은 상반기 강좌 시작 전 11~1월 공고가 일반적입니다." },
-  { src: "study", short: "시민제안강의", title: "대구시민대학 2027 상반기 시민제안강의 공모", start: "2027-01-05", end: "2027-02-27", conf: "중간",
-    basis: "2026 상반기는 4월 8일 수강생 모집, 4.27~6.26 운영. 강의 공모는 수강생 모집 2~3개월 전에 열립니다." },
+  { src: "dge", short: "교육청 늘봄 강사풀", title: "늘봄·방과후 강사풀 (2027학년도)", start: "2026-10-06", end: "2026-11-02", conf: "높음", live: true,
+    basis: "공식 보도로 접수 확인. 11.20 결과 발표." },
+  { src: "buk", short: "북구 나도야 강사", title: "북구 '나도야, 강사' 주민강사", start: "2026-10-01", end: "2026-12-31", conf: "높음", live: true,
+    basis: "통합예약 페이지에 2026.4.6~12.31 접수로 게시." },
+  { src: "dgulib", short: "도원도서관 강사", title: "달서구립도원도서관 문화강좌·북스타트 강사", start: "2026-10-10", end: "2026-10-24", conf: "중간", live: true,
+    basis: "10.10 게시 확인. 마감일 미확인 (도서관 공고는 보통 5~14일)." },
+  { src: "knu", short: "경북대 겨울·1학기", title: "경북대 평생교육원 신규강좌 접수", start: "2026-10-12", end: "2026-11-30", conf: "높음",
+    basis: "학사일정: 겨울학기 신규강좌 접수 10월, 1학기 신규강좌 접수 11월 말." },
+  { src: "mocha", short: "모카클래스 출강", title: "모카클래스 연말 기업 출강 수요", start: "2026-10-15", end: "2026-12-20", conf: "낮음",
+    basis: "연말 워크숍·송년회 시즌. 호스트 등록은 상시." },
+  { src: "yu", short: "영남대 강좌제안", title: "영남대 글로벌평생교육원 1학기 강좌제안", start: "2026-12-01", end: "2026-12-07", conf: "높음",
+    basis: "강좌제안 페이지에 매년 12.1~12.7 접수로 명시." },
+  { src: "hyundai", short: "현대 봄학기 제안", title: "현대·롯데 문화센터 봄학기 강좌 제안", start: "2026-11-15", end: "2027-01-15", conf: "중간",
+    basis: "롯데는 1월에 봄학기 접수 시작, 3월 개강. 제안은 그 전에 넣어야 라인업에 들어갑니다." },
+  { src: "dgulib", short: "공공도서관 상반기", title: "공공도서관 2027 상반기 강사 모집", start: "2026-11-15", end: "2027-01-31", conf: "낮음",
+    basis: "상반기 프로그램이 3월 시작이라 강사 공고는 12~1월로 추정." },
+  { src: "suseong", short: "구·군 상반기", title: "구·군 평생학습 2027 상반기 강사 공모", start: "2026-12-01", end: "2027-02-15", conf: "중간",
+    basis: "수성구 강사구인 게시판에 작년 1~2월 공개모집이 몰렸습니다(1.22, 2.6)." },
+  { src: "study", short: "시민대학 상반기", title: "대구시민대학 2027 상반기 시민강사 모집", start: "2027-02-01", end: "2027-03-15", conf: "중간",
+    basis: "하반기 공고 8.4 → 9.1 선정 → 10.1 개강. 상반기 개강 4월 말이라 공고는 2~3월." },
 ];
 
 const TYPES = ["전체", "강사모집", "강좌개설", "수강생모집"];
@@ -311,13 +430,15 @@ const store = {
 };
 
 let autoNotices = [];
-let checkedOn = "2026-10-10";
+let checkedOn = "2026-10-11";
 
 function allNotices() {
   const mine = store.get("myNotices", []).map(n => ({ ...n, mine: true }));
   return [...mine, ...autoNotices, ...NOTICES].map(n => {
     let status = n.status;
-    if (n.deadline && (status === "진행중" || status === "자동" || n.mine)) status = diffDays(n.deadline) < 0 ? "마감" : "진행중";
+    if (n.deadline && (["진행중", "예정", "자동"].includes(status) || n.mine)) {
+      status = diffDays(n.deadline) < 0 ? "마감" : n.open && diffDays(n.open) > 0 ? "예정" : "진행중";
+    }
     return { ...n, status };
   });
 }
@@ -332,15 +453,16 @@ function ddayBlock(n) {
 
 function renderNotices() {
   document.getElementById("filters").innerHTML = TYPES.map(t => `<button class="chipbtn" aria-pressed="${t === filter}" data-f="${t}">${t}</button>`).join("");
-  const order = { 진행중: 0, 자동: 1, 상시: 2, 참고: 3, 마감: 4 };
+  const order = { 진행중: 0, 자동: 1, 예정: 2, 상시: 3, 참고: 4, 마감: 5 };
   const list = allNotices()
     .filter(n => filter === "전체" || n.type === filter)
     .sort((a, b) => (order[a.status] - order[b.status]) || ((a.deadline ? diffDays(a.deadline) : 999) - (b.deadline ? diffDays(b.deadline) : 999)));
   const el = document.getElementById("noticeList");
   if (!list.length) { el.innerHTML = `<div class="empty">이 유형의 공고가 아직 없습니다.</div>`; return; }
   el.innerHTML = list.map(n => {
-    const src = SRC[n.src] || { name: n.src, home: "#" };
+    const src = SRC[n.src] || { name: n.src, board: "#" };
     const files = (n.files || n.attachments || []);
+    const docs = n.docs || [];
     const period = n.open || n.deadline ? `<span>${n.open ? fmt(n.open) : ""} ~ ${n.deadline ? fmt(n.deadline) : ""}</span>` : "";
     return `<article class="card">
       ${ddayBlock(n)}
@@ -348,10 +470,10 @@ function renderNotices() {
       <h3>${esc(n.title)}</h3>
       ${n.note ? `<p class="note">${esc(n.note)}</p>` : ""}
       <div class="links">
-        <a href="${esc(n.link || n.url || src.home)}" target="_blank" rel="noopener">공고 바로가기 ↗</a>
+        <a class="go" href="${esc(n.link || n.url || src.board)}" target="_blank" rel="noopener">${esc(n.linkLabel || "공고 바로가기")} ↗</a>
         ${(n.ref || []).map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("")}
       </div>
-      ${files.length ? `<ul class="files">${files.map(f => `<li><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)}</a></li>`).join("")}</ul>` : `<ul class="files"><li>공고 원문 첨부 확인 (공고문·지원서·강의계획서)</li></ul>`}</div>
+      ${files.length || docs.length ? `<div class="docs"><span class="eyebrow">첨부 · 제출서류</span><ul class="files">${files.map(f => `<li class="dl"><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)} ↗</a></li>`).join("")}${docs.map(d => `<li>${esc(d)}</li>`).join("")}</ul></div>` : ""}</div>
     </article>`;
   }).join("");
 }
@@ -375,7 +497,7 @@ function renderForecast() {
       <div class="body"><div class="meta"><span class="pill ${f.live ? "s-진행중" : "s-예상"}">${f.live ? "확인됨" : "예상"}</span><span>근거 ${esc(f.conf)}</span><span>${esc(when)}</span></div>
       <h3>${esc(f.title)}</h3>
       <p class="note">${esc(f.basis)}</p>
-      <div class="links"><a href="${esc((SRC[f.src] || {}).home)}" target="_blank" rel="noopener">기관 홈페이지 ↗</a>${f.ref ? `<a href="${esc(f.ref[1])}" target="_blank" rel="noopener">${esc(f.ref[0])} ↗</a>` : ""}</div></div>
+      <div class="links"><a href="${esc((SRC[f.src] || {}).board)}" target="_blank" rel="noopener">${esc((SRC[f.src] || {}).boardLabel || "게시판")} ↗</a>${f.ref ? `<a href="${esc(f.ref[1])}" target="_blank" rel="noopener">${esc(f.ref[0])} ↗</a>` : ""}</div></div>
     </article>`;
   }).join("");
 }
@@ -387,7 +509,12 @@ function renderSites() {
     SOURCES.filter(s => s.group === g).map(s => `<div class="site">
       <input type="checkbox" id="chk-${s.id}" data-chk="${s.id}" ${done[s.id] ? "checked" : ""} aria-label="${esc(s.name)} 이번 주 확인">
       <label for="chk-${s.id}" class="nm" style="color:var(--ink);font-size:15px">${esc(s.name)}</label>
-      <div class="sub"><a href="${esc(s.home)}" target="_blank" rel="noopener">${esc(s.home.replace(/^https?:\/\//, "").replace(/\/.*/, ""))} ↗</a><span>로그인: ${esc(s.login)}</span>${s.verified ? "" : `<span class="unverified">주소 확인 필요</span>`}</div>
+      <div class="sub">
+        <div class="btns"><a class="btn" href="${esc(s.board)}" target="_blank" rel="noopener">${esc(s.boardLabel)} ↗</a>${s.apply && s.apply !== s.board ? `<a class="btn alt" href="${esc(s.apply)}" target="_blank" rel="noopener">${esc(s.applyLabel)} ↗</a>` : ""}</div>
+        <span><b>시기</b> ${esc(s.when)}</span>
+        <span><b>로그인</b> ${esc(s.login)} · <b>문의</b> ${esc(s.contact)}</span>
+        ${s.forms.length ? `<ul class="files">${s.forms.map(f => f.url ? `<li class="dl"><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)} ↗</a></li>` : `<li>${esc(f.name)}</li>`).join("")}</ul>` : ""}
+      </div>
     </div>`).join("")}</div></div>`).join("");
 }
 
