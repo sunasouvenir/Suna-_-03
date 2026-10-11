@@ -1,0 +1,373 @@
+<title>테라리움 지원서 초안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: 제출 서류철 — 기관별 탭, 한 장씩 넘기는 서식 카드. 각 칸은 그대로 복사해 한글 양식에 붙여넣는다. */
+:root {
+  --bg: #f3f5f0; --surface: #ffffff; --ink: #1d2a24; --muted: #5f6c64; --line: #d8ddd5;
+  --accent: #2f6b4f; --accent-soft: #e3efe7; --stamp: #c2410c; --stamp-soft: #fbe9df; --warn: #946200; --warn-soft: #f7eed5;
+  --f-display: "Nanum Myeongjo", "Noto Serif KR", serif;
+  --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #121a16; --surface: #1a241f; --ink: #e3ebe6; --muted: #9aaaa1; --line: #2c3a33; --accent: #78c39c; --accent-soft: #1d3529; --stamp: #f08a5d; --stamp-soft: #3a2219; --warn: #e2b54f; --warn-soft: #362c14; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #121a16; --surface: #1a241f; --ink: #e3ebe6; --muted: #9aaaa1; --line: #2c3a33; --accent: #78c39c; --accent-soft: #1d3529; --stamp: #f08a5d; --stamp-soft: #3a2219; --warn: #e2b54f; --warn-soft: #362c14; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+.wrap > * { min-width: 0; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.65 var(--f-body); }
+.wrap { max-width: 780px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 56px; display: grid; gap: 18px; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font: 500 12px/1 var(--f-mono); letter-spacing: .08em; color: var(--muted); }
+h1 { font: 800 clamp(26px, 6vw, 34px)/1.2 var(--f-display); margin: 4px 0 6px; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+.notice { background: var(--warn-soft); color: var(--ink); border-radius: 6px; padding: 12px 14px; font-size: 14px; }
+.notice b { color: var(--warn); }
+.me { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: grid; gap: 10px; }
+.me h2 { margin: 0; font: 700 17px var(--f-display); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); }
+input { font: 15px var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 7px 9px; width: 100%; }
+nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 2; padding-top: 6px; }
+nav button { flex: none; font: 500 13px var(--f-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 12px; cursor: pointer; display: flex; gap: 6px; align-items: center; }
+nav button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+nav .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--stamp); }
+nav button[aria-selected="true"] .dot { background: var(--surface); }
+.head { display: grid; gap: 6px; }
+.head h2 { margin: 0; font: 800 22px/1.3 var(--f-display); text-wrap: balance; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 13px; color: var(--muted); align-items: center; }
+.pill { font: 600 11px/1 var(--f-body); padding: 4px 7px; border-radius: 3px; }
+.live { background: var(--stamp-soft); color: var(--stamp); }
+.prep { background: var(--accent-soft); color: var(--accent); }
+.how { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 14px; display: grid; gap: 6px; }
+.how ul { margin: 0; padding-left: 18px; }
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.sheet > header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--accent-soft); }
+.sheet > header h3 { margin: 0; font: 600 15px var(--f-body); color: var(--accent); }
+.row { display: grid; grid-template-columns: 130px minmax(0, 1fr); border-top: 1px solid var(--line); }
+.row:first-of-type { border-top: 0; }
+.row .k { padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--muted); background: var(--bg); }
+.row .v { padding: 10px 12px; white-space: pre-wrap; min-width: 0; overflow-wrap: anywhere; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 520px; }
+th, td { border-top: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--muted); background: var(--bg); font-weight: 600; }
+td:first-child { font-family: var(--f-mono); color: var(--accent); white-space: nowrap; }
+.copy { font: 500 12px var(--f-body); border: 1px solid var(--accent); background: var(--surface); color: var(--accent); border-radius: 4px; padding: 4px 10px; cursor: pointer; flex: none; }
+.copied { background: var(--accent); color: var(--surface); }
+.ph { background: var(--warn-soft); color: var(--warn); border-radius: 3px; padding: 0 3px; }
+.foot { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+@media (max-width: 520px) { .row { grid-template-columns: 1fr; } .row .k { padding-bottom: 4px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">TERRARIUM · 2026 겨울 지원 준비</span>
+    <h1>테라리움 지원서 초안</h1>
+    <p class="lede">지금 열린 공고와 곧 열릴 공고마다 기관 양식에 들어가는 칸을 테라리움 강좌로 채워뒀습니다. 칸마다 복사 버튼을 눌러 한글(hwp) 양식에 그대로 붙여넣으세요.</p>
+  </header>
+
+  <p class="notice"><b>원본 양식 파일은 아직 못 받았습니다.</b> 이 작업 환경에서 대구 기관 사이트 접속이 막혀 있어 hwp 파일을 열 수 없었습니다. 아래 칸 구성은 기관이 공개한 제출서류 목록과 같은 종류 공고의 일반 서식 기준입니다. 원본 양식을 받으면 칸 이름만 맞춰 옮기면 됩니다.</p>
+
+  <section class="me" aria-label="내 정보">
+    <h2>내 정보 (한 번 입력하면 모든 서식에 들어감)</h2>
+    <div class="grid">
+      <label for="f-name">이름<input id="f-name" data-k="name" placeholder="홍길동"></label>
+      <label for="f-studio">공방·브랜드명<input id="f-studio" data-k="studio" placeholder="○○ 테라리움 공방"></label>
+      <label for="f-phone">연락처<input id="f-phone" data-k="phone" placeholder="010-0000-0000"></label>
+      <label for="f-email">이메일<input id="f-email" data-k="email" placeholder="name@example.com"></label>
+      <label for="f-years">강의 경력 (년)<input id="f-years" data-k="years" placeholder="3"></label>
+      <label for="f-cert">자격증<input id="f-cert" data-k="cert" placeholder="반려식물관리사, 플랜테리어 지도사"></label>
+      <label for="f-area">거주 구<input id="f-area" data-k="area" placeholder="대구 북구"></label>
+    </div>
+  </section>
+
+  <nav id="tabs" role="tablist" aria-label="지원처"></nav>
+  <main id="panel"></main>
+
+  <p class="foot">이 페이지에 입력한 내 정보는 이 기기에만 저장됩니다. 교육과정 연계는 2022 개정 초등 과학(3~4학년 식물의 생활, 5~6학년 생물과 환경) 기준입니다.</p>
+</div>
+
+<script>
+const ME_KEYS = { name: "이름", studio: "공방명", phone: "연락처", email: "이메일", years: "N", cert: "자격증", area: "거주 구" };
+
+const BIO = `성명: {name}
+소속: {studio} 대표
+연락처: {phone} / {email}
+자격: {cert}
+강의 경력: 테라리움·플랜테리어 강의 {years}년
+주요 이력:
+- {studio} 운영, 성인·어린이 테라리움 정규반 및 원데이 클래스 운영
+- 기관 출강: [예: ○○구 평생학습관, ○○초 방과후, ○○기업 워크숍] (날짜·횟수 기재)
+- 작품 전시·판매: [예: 플리마켓, 온라인 스토어]
+강의 특징: 이끼·다육·관엽을 이용한 밀폐형/오픈형 테라리움을 수강생 수준에 맞춰 단계별로 지도하며, 작품을 집에 가져가 오래 키울 수 있도록 관리법까지 함께 가르칩니다.`;
+
+const APPS = [
+  {
+    id: "neulbom", short: "늘봄·방과후", live: true,
+    title: "대구교육청 2027학년도 늘봄·방과후학교 강사풀",
+    when: "11.2(월) 마감 · 11.20 결과", where: "대구늘봄학교지원센터 회원가입 → 강사선정지원시스템에 운영 제안서 + 증빙 제출",
+    link: "https://www.dge.go.kr/afterschool",
+    tips: ["작년에 등록했어도 제안서가 초기화되니 새로 내야 합니다.", "증빙: 자격증 사본, 강의 경력증명(기관 발급), 성범죄·아동학대 경력 조회 동의서는 학교 채용 단계에서 요구됩니다.", "저학년/고학년 두 개 프로그램으로 내면 배정 기회가 늘어납니다."],
+    sheets: [
+      { title: "프로그램 운영 제안서", rows: [
+        ["프로그램명", "손안의 작은 숲, 테라리움 생태교실"],
+        ["대상·정원", "초등 1~6학년 (저학년반·고학년반 분반 운영 가능) / 반당 12~15명"],
+        ["운영 시간", "주 1회 80분(2차시), 분기 12회 / 늘봄 오후 프로그램 및 방학 집중반 운영 가능"],
+        ["운영 목적", "유리병 속에 작은 생태계를 직접 만들고 돌보며 식물의 생활과 물의 순환을 체험으로 이해한다. 완성 작품을 집에서 관찰하며 생명을 책임지는 태도와 관찰 습관을 기른다."],
+        ["교육과정 연계", "과학 3~4학년 '식물의 생활', '물의 여행' / 5~6학년 '생물과 환경' / 창의적 체험활동(환경·생태 교육)"],
+        ["수업 방법", "① 실물 관찰(루페·관찰지) → ② 원리 설명(그림 카드) → ③ 만들기 실습 → ④ 관찰일지 작성. 매 차시 개인 작품 완성, 8차시는 모둠 공동 정원."],
+        ["재료비", "1인 월 20,000원 내외 (회당 5,000~8,000원). 용기·흙·이끼·식물·미니어처 포함, 강사 일괄 구입"],
+        ["안전 계획", "유리 대신 PET·아크릴 용기 사용, 끝이 둥근 어린이용 핀셋, 흙 작업 시 장갑 지급, 작업 후 손씻기 지도. 알레르기 학생 사전 확인."],
+        ["기대 효과", "관찰·기록 습관 형성, 생명 존중 태도, 소근육 발달, 완성 작품으로 가정 연계 대화 유도"],
+      ]},
+      { title: "차시별 운영 계획 (12회)", table: [
+        ["1", "식물과 친해지기", "이끼·다육 루페 관찰, 관찰지 작성"],
+        ["2", "병 속의 비", "밀폐 용기로 증발·응결 실험 (물의 순환)"],
+        ["3", "흙의 층 쌓기", "배수층·숯·흙 층 만들기 (병 속 지층)"],
+        ["4", "첫 이끼 테라리움", "미니 밀폐병 테라리움 완성"],
+        ["5", "사막 정원", "다육식물 오픈형 테라리움"],
+        ["6", "물 주기 과학", "분무량 실험, 관찰일지 쓰는 법"],
+        ["7", "그림책 속 장면", "미니어처로 그림책 한 장면 연출"],
+        ["8", "우리 반 공동 정원", "모둠별 대형 수조 정원 협동 제작"],
+        ["9", "먹이사슬 탐험", "곤충·동물 피규어로 생태계 구성"],
+        ["10", "다시 쓰는 용기", "재활용 용기 테라리움 (환경 교육)"],
+        ["11", "마음을 담은 선물", "가족 선물용 테라리움 + 카드"],
+        ["12", "작은 숲 발표회", "작품 소개, 관리법 정리, 수료"],
+      ]},
+      { title: "강사 이력", bio: true },
+    ]
+  },
+  {
+    id: "dowon", short: "도원도서관", live: true,
+    title: "달서구립도원도서관 문화강좌 · 북스타트 강사 공개모집",
+    when: "10.10 게시 · 마감일은 원문 확인", where: "대구통합도서관 공지 원문의 지원서·강의계획서 양식 (문의 053-667-4840)",
+    link: "https://library.daegu.go.kr/dgulib/index.do",
+    tips: ["문화강좌(성인)와 북스타트(영유아) 둘 다 낼 수 있게 두 개를 준비했습니다.", "도서관 강좌는 '책 연계'가 들어가면 점수가 좋습니다. 강의마다 관련 도서를 붙였습니다.", "장소가 3층 시청각실이라 물·흙 작업용 방수포를 직접 준비한다고 적어두세요."],
+    sheets: [
+      { title: "강의계획서 ① 문화강좌 (성인)", rows: [
+        ["강좌명", "초록 쉼표, 테라리움 정원 만들기"],
+        ["대상·정원", "성인 15명"],
+        ["운영", "주 1회 2시간 × 8회"],
+        ["강좌 목표", "식물 기초부터 밀폐형·오픈형 테라리움 구성까지 익혀, 집 안에 오래 두고 키울 수 있는 작품을 완성한다. 식물 관련 도서를 함께 읽어 도서관 이용으로 이어지게 한다."],
+        ["연계 도서", "『식물 산책』, 『반려식물 키우기』 등 도서관 소장 원예서 (강좌 첫날 대출 안내)"],
+        ["재료비", "1인 회당 8,000~12,000원 (수강생 부담, 강사 일괄 준비)"],
+        ["준비물·환경", "방수포·분무기·도구 강사 지참, 작업 후 원상 정리"],
+      ]},
+      { title: "회차 계획 (문화강좌 8회)", table: [
+        ["1", "테라리움 이해", "역사·종류·도구, 미니 이끼병"],
+        ["2", "이끼 정원", "비단이끼·서리이끼로 밀폐형"],
+        ["3", "다육 정원", "오픈형 다육 테라리움"],
+        ["4", "관엽 정원", "피토니아·호야 등 실내 관엽 배치"],
+        ["5", "돌과 나무", "하드스케이프(돌·유목) 구도 잡기"],
+        ["6", "이야기 연출", "미니어처로 장면 만들기"],
+        ["7", "대형 작품", "어항형 대형 테라리움"],
+        ["8", "관리와 전시", "병해·물주기·빛, 작품 전시"],
+      ]},
+      { title: "강의계획서 ② 북스타트 (영유아·보호자)", rows: [
+        ["프로그램명", "그림책 속 숲을 병에 담아요"],
+        ["대상·정원", "24~48개월 영유아와 보호자 10가족"],
+        ["운영", "1회 50분 (그림책 15분 + 만들기 30분 + 사진 5분)"],
+        ["연계 그림책", "『나무는 좋다』(재니스 메이 우드리), 『작은 씨앗』(에릭 칼) 중 택1"],
+        ["활동", "그림책을 함께 읽고, 보호자와 아이가 큰 입구 플라스틱 용기에 흙·이끼·미니 동물을 넣어 책 속 숲을 꾸민다."],
+        ["안전", "삼킴 위험 없는 3cm 이상 피규어만 사용, 날카로운 도구 없음, 무독성 식물만 사용"],
+        ["재료비", "가족당 6,000원"],
+      ]},
+      { title: "강사 이력", bio: true },
+    ]
+  },
+  {
+    id: "buk", short: "북구 나도야 강사", live: true,
+    title: "북구 평생학습 '나도야, 강사' 원데이 특강",
+    when: "12.31까지 접수", where: "네이버 밴드 '나도야, 강사' 가입 → 북구 평생학습센터 홈페이지 또는 방문 신청 (053-665-2714)",
+    link: "https://www.buk.daegu.kr/lll/index.do?menu_id=00004135",
+    tips: ["북구 주민만 신청할 수 있습니다. 주소가 북구가 아니면 건너뛰세요.", "최대 3시간 1회 특강이라 2시간 구성으로 맞췄습니다.", "공방에서 직접 해도 된다고 되어 있어 장소를 공방으로 쓰면 재료 운반이 편합니다."],
+    sheets: [
+      { title: "특강 신청 내용", rows: [
+        ["강좌명", "이끼 테라리움 원데이: 유리병 속 작은 숲"],
+        ["대상·정원", "성인 및 가족 10명 내외"],
+        ["시간", "2시간 1회"],
+        ["장소", "{studio} (북구) 또는 관내 유휴공간"],
+        ["진행", "0:00 테라리움 원리와 이끼 소개 (15분)\n0:15 배수층·흙 쌓기 (20분)\n0:35 이끼·식물 심기 (40분)\n1:15 미니어처 연출과 마감 (25분)\n1:40 관리법·질의응답 (20분)"],
+        ["재료비", "1인 15,000원 (유리병·이끼·흙·미니어처 포함)"],
+        ["강사 소개", "{studio} 대표, 테라리움 강의 {years}년"],
+      ]},
+    ]
+  },
+  {
+    id: "knu", short: "경북대 1학기", live: false,
+    title: "경북대 평생교육원 2027학년도 1학기 신규강좌",
+    when: "11월 말 접수 예정 (공지사항 확인)", where: "평생교육원 행정실 방문 접수 (053-950-6253, 6255)",
+    link: "https://lifelong.knu.ac.kr/hmpg/cms/bbsPage/MNU0070091.knu",
+    tips: ["작년 제출서류: 강좌개설신청서, 강사 준수사항, 강의계획서, 강사이력서(추천서), 최종학력증명서, 경력증명서(해당자).", "최소 6명이 차야 개강하므로 '수강생 모집 가능 경로'(공방 수강생, SNS)를 적어두면 유리합니다.", "서류 → 면접 → 운영위원회 순입니다."],
+    sheets: [
+      { title: "강좌개설신청서", rows: [
+        ["강좌명", "테라리움 & 플랜테리어 실기"],
+        ["과정 구분", "일반교양과정 (생활원예)"],
+        ["수강 대상", "성인 누구나 (원예 경험 무관)"],
+        ["정원", "최소 6명 / 최대 15명"],
+        ["강의 시간", "주 1회 2시간 × 12주 (평일 저녁 또는 토요일 오전)"],
+        ["수강료(안)", "학기 수강료 평생교육원 기준 + 재료비 별도 1인 120,000원 (12회분)"],
+        ["개설 목적", "실내 정원 수요가 늘어난 가운데, 유리 용기 안에 생태계를 설계하는 테라리움을 체계적으로 배워 생활 속 녹색 공간을 만들고 취미에서 공방 창업까지 이어갈 수 있는 기초를 쌓는다."],
+        ["수강생 모집 계획", "{studio} 수강생 및 SNS 채널 안내, 지역 원예 커뮤니티 홍보"],
+      ]},
+      { title: "강의계획서 (12주)", table: [
+        ["1", "테라리움 개론", "역사·종류(밀폐/오픈/팔루다리움), 도구"],
+        ["2", "식물 생리 기초", "빛·습도·통기와 용기 안 환경"],
+        ["3", "이끼의 세계", "이끼 종류와 채취·관리 윤리"],
+        ["4", "밀폐형 실습", "이끼·양치 밀폐 테라리움"],
+        ["5", "오픈형 실습", "다육·선인장 테라리움"],
+        ["6", "관엽 테라리움", "피토니아·필레아 등 실내 관엽"],
+        ["7", "구도 이론", "삼각구도·황금비, 돌·유목 하드스케이프"],
+        ["8", "연출 실습", "미니어처로 이야기 있는 장면"],
+        ["9", "대형 수조 1", "레이아웃 설계와 배수 구조"],
+        ["10", "대형 수조 2", "식재와 마감"],
+        ["11", "관리와 병해", "곰팡이·과습 대처, 조명, 장기 유지"],
+        ["12", "작품 발표", "포트폴리오 촬영, 판매·공방 운영 이야기"],
+      ]},
+      { title: "강사이력서", bio: true },
+    ]
+  },
+  {
+    id: "yu", short: "영남대 강좌제안", live: false,
+    title: "영남대 글로벌평생교육원 2027-1학기 강좌제안",
+    when: "12.1 ~ 12.7 (매년 같음)", where: "강좌제안 페이지에서 양식 받아 yulife@yu.ac.kr 로 메일 (053-810-4965)",
+    link: "https://www.yu.ac.kr/yulife/news/lecture-suggestion.do",
+    tips: ["경북대와 같은 내용을 쓰되, 영남대는 자격 과정 수요가 많아 '지도자 과정'으로 방향을 바꿨습니다.", "제안서 내용이 사실과 다르면 선정 후 취소될 수 있으니 경력은 증빙 가능한 것만 적으세요."],
+    sheets: [
+      { title: "강좌제안서", rows: [
+        ["강좌명", "테라리움 지도자 과정 (기초·실기)"],
+        ["강좌 개요", "테라리움 제작의 원리와 실기를 익히고, 수업 운영 방법까지 배워 방과후·문화센터·공방에서 강의할 수 있는 역량을 기른다."],
+        ["대상", "원예·공예에 관심 있는 성인, 강사 활동 희망자"],
+        ["기간·시간", "3월 개강, 주 1회 2.5시간 × 12주"],
+        ["정원", "12~15명"],
+        ["주요 내용", "1~6주: 밀폐형·오픈형·관엽 테라리움 실기\n7~9주: 구도·연출·대형 수조\n10~11주: 수업안 작성, 연령별 지도법, 재료 원가 계산\n12주: 시범 강의와 작품 발표"],
+        ["재료비", "1인 150,000원 (12주분)"],
+        ["기대 효과", "수료 후 지역 평생학습·방과후 강사로 활동할 수 있는 실기와 수업 설계 능력"],
+      ]},
+      { title: "강사 이력", bio: true },
+    ]
+  },
+  {
+    id: "citizen", short: "대구시민대학", live: false,
+    title: "대구시민대학 2027 상반기 시민제안강의 개설 신청서",
+    when: "2~3월 공고 예상 (작년 하반기 8.4 공고)", where: "대구평생학습플랫폼 공지사항 → 서식1 시민제안강의 개설 신청서",
+    link: "https://dle.study.daegu.kr/index.do?menu_id=00004232",
+    tips: ["작년 첨부: 공고문(PDF), 서식1 시민제안강의 개설 신청서, 서식2 기획강의 개설 신청서. 시민강사는 서식1을 씁니다.", "하반기는 26개 강좌 124회였으니 한 강좌가 4~5회입니다. 5회로 맞췄습니다.", "시민대학은 '시민 삶의 문제 해결·공동체' 주제를 좋아해서 도시 녹지·정서 회복으로 잡았습니다."],
+    sheets: [
+      { title: "서식1 시민제안강의 개설 신청서", rows: [
+        ["강의명", "도시 속 작은 숲: 테라리움으로 배우는 초록 돌봄"],
+        ["제안 배경", "아파트 생활로 자연과 만날 기회가 줄어든 시민에게, 손바닥만 한 유리병 안에 생태계를 만들고 돌보는 경험을 통해 정서적 쉼과 생명 돌봄의 즐거움을 전한다."],
+        ["학습 대상", "대구 시민 15명 (성인, 중장년 환영)"],
+        ["운영", "5회 × 2시간, 평일 오후"],
+        ["회차 구성", "1회 병 속 생태계의 원리, 미니 이끼병\n2회 다육 오픈 정원\n3회 관엽 정원과 빛·물 관리\n4회 나만의 이야기 정원 (미니어처 연출)\n5회 이웃에게 선물하는 테라리움, 돌봄 나눔"],
+        ["기대 효과", "생활 속 녹색 취미 형성, 정서 안정, 5회차 나눔 활동으로 이웃 관계 회복"],
+        ["재료비", "1인 회당 8,000원 (재료비 지원 여부는 공고 기준에 맞춤)"],
+        ["강사 소개", "{studio} 대표, 테라리움 강의 {years}년, {cert}"],
+      ]},
+    ]
+  },
+  {
+    id: "dept", short: "백화점 봄학기", live: false,
+    title: "현대·롯데·신세계 문화센터 봄학기 강좌 제안서",
+    when: "11월 중순 ~ 1월 (봄학기 3월 개강 전)", where: "현대: 로그인 > 문화센터 > 이용안내 > 온라인 강사지원 / 롯데: 강사지원·제휴신청",
+    link: "https://culture.lotteshopping.com/information/application/index.do",
+    tips: ["문화센터는 정규(3개월 10~12회) + 원데이 + 엄마랑 아이 세 가지를 같이 내면 채택이 쉽습니다.", "봄학기는 '봄맞이 그린 인테리어' 테마가 잘 팔립니다.", "현대 온라인 강사지원은 로그인이 필요해 직접 넣으셔야 합니다."],
+    sheets: [
+      { title: "강좌 제안서", rows: [
+        ["강좌명 (정규)", "봄을 담는 테라리움 클래스 (3개월 10회)"],
+        ["강좌명 (원데이)", "봄맞이 이끼 테라리움 원데이"],
+        ["강좌명 (키즈)", "엄마랑 만드는 공룡 숲 테라리움 (5~7세)"],
+        ["강좌 소개", "유리 용기 속에 이끼·다육·관엽으로 작은 정원을 만드는 수업입니다. 매 회 작품 하나를 완성해 가져가며, 집에서 오래 키울 수 있는 관리법까지 함께 배웁니다."],
+        ["대상·정원", "정규 성인 12명 / 원데이 10명 / 키즈 8가족"],
+        ["시간", "정규 주 1회 2시간 / 원데이 2시간 / 키즈 50분"],
+        ["재료비", "정규 회당 15,000원 / 원데이 35,000원 / 키즈 25,000원"],
+        ["차별점", "작품이 인테리어 소품으로 남아 재등록률이 높고, 계절별 식물로 매 학기 커리큘럼을 바꿀 수 있습니다."],
+      ]},
+      { title: "강사 이력", bio: true },
+    ]
+  },
+  {
+    id: "corp", short: "모카클래스·솜씨당", live: false,
+    title: "모카클래스 기업 출강 · 솜씨당 클래스 등록",
+    when: "상시 · 연말 워크숍 수요 11~12월", where: "모카클래스 호스트 센터 / 솜씨당 작가 등록 (sssd.co.kr/host)",
+    link: "https://mochaclass.com/HostInfo",
+    tips: ["솜씨당은 지방 클래스 제목 앞에 [대구]를 붙이라는 가이드가 있습니다.", "기업 출강은 인원별 단가표가 있으면 견적이 빨리 나갑니다."],
+    sheets: [
+      { title: "출강 클래스 소개", rows: [
+        ["클래스명", "[대구] 팀 테라리움 워크숍: 우리 팀의 작은 숲"],
+        ["소개", "팀원들이 각자 이끼 테라리움을 만들고, 마지막에 한자리에 모아 '팀의 숲'을 완성하는 90분 워크숍입니다. 손으로 만드는 시간 동안 자연스럽게 대화가 오가고, 완성작은 각자 책상 위에 두고 키웁니다."],
+        ["인원", "10~50명 (30명 이상은 보조강사 1명 동행)"],
+        ["시간", "90분 (원리 15분 · 제작 60분 · 사진·관리법 15분)"],
+        ["출강 지역", "대구·경북 전역 (그 외 지역 협의)"],
+        ["가격", "1인 30,000원 (재료·출강비 포함, 20인 이상 1인 27,000원)"],
+        ["준비 요청", "책상, 물 사용 가능한 공간. 방수포·도구는 강사 지참"],
+        ["연말 테마", "크리스마스 스노우볼 테라리움으로 변경 가능 (12월)"],
+      ]},
+    ]
+  },
+];
+
+const store = {
+  get(k, f) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : f; } catch { return f; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let me = store.get("terr-me", {});
+let current = store.get("terr-tab", APPS[0].id);
+
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+function fill(t, html) {
+  return t.replace(/\{(\w+)\}/g, (_, k) => me[k] ? (html ? esc(me[k]) : me[k]) : (html ? `<span class="ph">[${ME_KEYS[k]}]</span>` : `[${ME_KEYS[k]}]`));
+}
+function fillHtml(t) { return fill(esc(t), true); }
+
+function sheetText(sh) {
+  if (sh.bio) return fill(BIO);
+  if (sh.table) return sh.table.map(r => `${r[0]}회 | ${r[1]} | ${r[2]}`).join("\n");
+  return sh.rows.map(([k, v]) => `${k}: ${fill(v)}`).join("\n");
+}
+
+function render() {
+  document.getElementById("tabs").innerHTML = APPS.map(a => `<button role="tab" aria-selected="${a.id === current}" data-id="${a.id}">${a.live ? '<span class="dot" aria-hidden="true"></span>' : ""}${esc(a.short)}</button>`).join("");
+  const a = APPS.find(x => x.id === current) || APPS[0];
+  document.getElementById("panel").innerHTML = `
+    <div class="head">
+      <div class="meta"><span class="pill ${a.live ? "live" : "prep"}">${a.live ? "지금 접수 중" : "미리 작성"}</span><span>${esc(a.when)}</span></div>
+      <h2>${esc(a.title)}</h2>
+    </div>
+    <div class="how"><div><b>제출:</b> ${esc(a.where)} · <a href="${esc(a.link)}" target="_blank" rel="noopener">공고·양식 위치 ↗</a></div><ul>${a.tips.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+    ${a.sheets.map((sh, i) => `<section class="sheet">
+      <header><h3>${esc(sh.title)}</h3><button class="copy" data-copy="${i}">전체 복사</button></header>
+      ${sh.bio ? `<div class="row"><div class="k">이력</div><div class="v">${fillHtml(BIO)}</div></div>`
+      : sh.table ? `<div class="tbl"><table><thead><tr><th>회차</th><th>주제</th><th>활동</th></tr></thead><tbody>${sh.table.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("")}</tbody></table></div>`
+      : sh.rows.map(([k, v]) => `<div class="row"><div class="k">${esc(k)}</div><div class="v">${fillHtml(v)}</div></div>`).join("")}
+    </section>`).join("")}`;
+}
+
+document.getElementById("tabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-id]"); if (!b) return;
+  current = b.dataset.id; store.set("terr-tab", current); render();
+});
+document.querySelector(".me").addEventListener("input", e => {
+  const k = e.target.dataset.k; if (!k) return;
+  me[k] = e.target.value.trim(); store.set("terr-me", me);
+  render();
+});
+document.getElementById("panel").addEventListener("click", e => {
+  const b = e.target.closest("[data-copy]"); if (!b) return;
+  const a = APPS.find(x => x.id === current);
+  const text = sheetText(a.sheets[+b.dataset.copy]);
+  const done = () => { b.textContent = "복사됨"; b.classList.add("copied"); setTimeout(() => { b.textContent = "전체 복사"; b.classList.remove("copied"); }, 1500); };
+  navigator.clipboard?.writeText(text).then(done).catch(() => {
+    const sel = window.getSelection(), r = document.createRange();
+    r.selectNodeContents(b.closest(".sheet")); sel.removeAllRanges(); sel.addRange(r);
+    b.textContent = "선택됨 (길게 눌러 복사)";
+  });
+});
+document.querySelectorAll(".me input").forEach(i => { i.value = me[i.dataset.k] || ""; });
+render();
+</script>
