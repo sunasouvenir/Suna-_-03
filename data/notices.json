@@ -1,4 +1,406 @@
 {
-  "checked": "2026-10-10",
-  "notices": []
+  "checked": "2026-10-12",
+  "notices": [
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2841",
+      "source": "du",
+      "title": "[학점]2026-2학기 학점은행제 사회복지현장실습 (11월 개강반) 학습자 모집 2026-10-01",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2841",
+      "deadline": "2026-10-01",
+      "attachments": [
+        {
+          "name": "2026학년도 실습신청서 및 회신서 양식.hwp",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026학년도 실습신청서 및 회신서 양식.hwp&filepath=/files/article/notice/2841/&filerealname=A387FC61302E494F9CBBD38C4531C3E1.hwp"
+        },
+        {
+          "name": "2026-2학기 11월 개강 (사회복지현장실습)학점은행제 입학원서 및 개인정보동의서.hwp",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 11월 개강 (사회복지현장실습)학점은행제 입학원서 및 개인정보동의서.hwp&filepath=/files/article/notice/2841/&filerealname=68936B8713BB413891F7CDCFF4BF9B52.hwp"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2821",
+      "source": "du",
+      "title": "[2026-2학기] 일반전문과정 강좌 수강생 모집 2026-08-18",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2821",
+      "deadline": "2026-08-18",
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2803",
+      "source": "du",
+      "title": "[학점]2026-2학기 학점은행제 외국어로서의한국어교육실습 학습자 모집 2026-07-10",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2803",
+      "deadline": "2026-07-10",
+      "attachments": [
+        {
+          "name": "2026-2학기 (한국어실습)학점은행제 입학원서 및 개인정보동의서.hwp",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 (한국어실습)학점은행제 입학원서 및 개인정보동의서.hwp&filepath=/files/article/notice/2803/&filerealname=26AF6FDD2C52440E822AD58C156F1FD5.hwp"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2802",
+      "source": "du",
+      "title": "[학점]2026-2학기 학점은행제 평생교육실습 학습자 모집 2026-07-10",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2802",
+      "deadline": "2026-07-10",
+      "attachments": [
+        {
+          "name": "2026-2학기 (평생교육실습)학점은행제 입학원서 및 개인정보동의서.hwp",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 (평생교육실습)학점은행제 입학원서 및 개인정보동의서.hwp&filepath=/files/article/notice/2802/&filerealname=A6A25CAA8F3343FFADF74C1027FC41C1.hwp"
+        },
+        {
+          "name": "2026-2학기 평생교육실습 학습자 안내 사항.pdf",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 평생교육실습 학습자 안내 사항.pdf&filepath=/files/article/notice/2802/&filerealname=E0B7B50C04F64122A9194FC7EA965A8A.pdf"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2801",
+      "source": "du",
+      "title": "[학점]2026-2학기 학점은행제 사회복지현장실습 학습자 모집 2026-07-10",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2801",
+      "deadline": "2026-07-10",
+      "attachments": [
+        {
+          "name": "2026-2학기 (사회복지현장실습)학점은행제 입학원서 및 개인정보동의서.hwp",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 (사회복지현장실습)학점은행제 입학원서 및 개인정보동의서.hwp&filepath=/files/article/notice/2801/&filerealname=0DC2304B4A6B4C709AC68616F5EE786F.hwp"
+        },
+        {
+          "name": "2026-2학기 사회복지현장실습 학습자 안내 사항.pdf",
+          "url": "https://lifelong.daegu.ac.kr/cmmn/fileDown.do?filename=2026-2학기 사회복지현장실습 학습자 안내 사항.pdf&filepath=/files/article/notice/2801/&filerealname=9D1E4DB2819E4432A5BB56FCC472F2D9.pdf"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2781",
+      "source": "du",
+      "title": "[모집마감]2026년 자연환경해설사 기본양성과정 기숙사 게스트룸 이용 안내 2026-06-30",
+      "type": "수강생모집",
+      "url": "https://lifelong.daegu.ac.kr/article/notice/detail/2781",
+      "deadline": "2026-06-30",
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "suseong:https://lll.suseong.kr/index.do?menu_id=00001889",
+      "source": "suseong",
+      "title": "평생교육강사",
+      "type": "강사모집",
+      "url": "https://lll.suseong.kr/index.do?menu_id=00001889",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "suseong:javascript:;",
+      "source": "suseong",
+      "title": "(사)달구벌나눔문화예술 아트센터 달에서 필라테스 강사 구인합니다.",
+      "type": "강사모집",
+      "url": "javascript:;",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "buk:https://www.buk.daegu.kr/lll/index.do?menu_id=00004135",
+      "source": "buk",
+      "title": "나도야, 강사",
+      "type": "강사모집",
+      "url": "https://www.buk.daegu.kr/lll/index.do?menu_id=00004135",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "buk:https://www.buk.daegu.kr/lll/index.do?menu_id=00000752",
+      "source": "buk",
+      "title": "평생학습강사",
+      "type": "강사모집",
+      "url": "https://www.buk.daegu.kr/lll/index.do?menu_id=00000752",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "buk:javascript:;",
+      "source": "buk",
+      "title": "『제3회 우리북구 지식왕!!』 초등학생 참가자 모집",
+      "type": "수강생모집",
+      "url": "javascript:;",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/list.do?a_num=27597560",
+      "source": "nam",
+      "title": "프로그램 제안",
+      "type": "강좌개설",
+      "url": "https://nam.daegu.kr/lll/board/list.do?a_num=27597560",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=189",
+      "source": "nam",
+      "title": "2026 남구 평생학습관 4차 프로그램 수강생 모집 및 자격정보 안내",
+      "type": "수강생모집",
+      "url": "https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=189",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=185",
+      "source": "nam",
+      "title": "2026년 똑똑~런 배달강좌 지원사업 모집 공고",
+      "type": "수강생모집",
+      "url": "https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=185",
+      "deadline": "2027-07-31",
+      "attachments": [
+        {
+          "name": "2026 똑똑~런 공고문.hwp",
+          "url": "https://nam.daegu.kr/lll/board/down.do?a_num=79905075&b_num=185&f_num=1"
+        },
+        {
+          "name": "1. 2026년 똑똑~런 사업신청서.hwp",
+          "url": "https://nam.daegu.kr/lll/board/down.do?a_num=79905075&b_num=185&f_num=2"
+        },
+        {
+          "name": "2. 똑똑~런 사업결과보고서.hwp",
+          "url": "https://nam.daegu.kr/lll/board/down.do?a_num=79905075&b_num=185&f_num=3"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=177",
+      "source": "nam",
+      "title": "2026 남구 평생학습관 3차 프로그램 수강생 모집 및 자격정보 안내",
+      "type": "수강생모집",
+      "url": "https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=177",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=176",
+      "source": "nam",
+      "title": "계명대학교 RISE 사업 [시민과 함께하는 열린 대학] 수강생 모집",
+      "type": "수강생모집",
+      "url": "https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=176",
+      "deadline": null,
+      "attachments": [
+        {
+          "name": "정원 생활 입문 클래스 교육과정 내용(2026년).pdf",
+          "url": "https://nam.daegu.kr/lll/board/down.do?a_num=79905075&b_num=176&f_num=1"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/contents.do?idx=312",
+      "source": "nam",
+      "title": "강사등록안내",
+      "type": "강사모집",
+      "url": "https://nam.daegu.kr/lll/contents.do?idx=312",
+      "deadline": null,
+      "attachments": [
+        {
+          "name": "신청서 다운로드",
+          "url": "https://nam.daegu.kr/lll/nanum/site/img/04network/file/s0201_file01.hwp"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/list.do?a_num=42522953",
+      "source": "nam",
+      "title": "강사등록현황",
+      "type": "강사모집",
+      "url": "https://nam.daegu.kr/lll/board/list.do?a_num=42522953",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "dalseong:https://www.dalseong.daegu.kr/index.do?menu_id=00002830",
+      "source": "dalseong",
+      "title": "설계공모 질의응답",
+      "type": "강좌개설",
+      "url": "https://www.dalseong.daegu.kr/index.do?menu_id=00002830",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "dalseong:https://minwon.daegu.go.kr",
+      "source": "dalseong",
+      "title": "민원·공모 홈서비스",
+      "type": "강좌개설",
+      "url": "https://minwon.daegu.go.kr",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "dalseong:https://www.dalseong.daegu.kr/index.do?menu_id=00001490",
+      "source": "dalseong",
+      "title": "주민제안사업 공모",
+      "type": "강좌개설",
+      "url": "https://www.dalseong.daegu.kr/index.do?menu_id=00001490",
+      "deadline": null,
+      "attachments": [
+        {
+          "name": "신청서 다운로드",
+          "url": "https://www.dalseong.daegu.kr/cmsh/dalseong.daegu.kr/images/content/jumin-2025.hwp"
+        }
+      ],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "dalseong:javascript:;",
+      "source": "dalseong",
+      "title": "2025년 기준 경제총조사 조사요원 추가 모집 공고",
+      "type": "수강생모집",
+      "url": "javascript:;",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "moka:https://www.ehyundai.com/newCulture/CT/CT050600_M.do ",
+      "source": "moka",
+      "title": "강사지원·제휴 제안 문의",
+      "type": "강사모집",
+      "url": "https://www.ehyundai.com/newCulture/CT/CT050600_M.do ",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "moka:javascript:void(0);",
+      "source": "moka",
+      "title": "Question 강사 지원 방법",
+      "type": "강사모집",
+      "url": "javascript:void(0);",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "moka:https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005#none",
+      "source": "moka",
+      "title": "강사지원·제휴 제안 문의",
+      "type": "강사모집",
+      "url": "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005#none",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "hyundai:https://www.ehyundai.com/newCulture/CT/CT050600_M.do ",
+      "source": "hyundai",
+      "title": "강사지원·제휴 제안 문의",
+      "type": "강사모집",
+      "url": "https://www.ehyundai.com/newCulture/CT/CT050600_M.do ",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "hyundai:https://www.ehyundai.com/newCulture/CT/CT050200_V.do?bbsCd=600000003&branchCd=&classfyCd=21&search=all&keyword=&seq=2077507#none",
+      "source": "hyundai",
+      "title": "강사지원·제휴 제안 문의",
+      "type": "강사모집",
+      "url": "https://www.ehyundai.com/newCulture/CT/CT050200_V.do?bbsCd=600000003&branchCd=&classfyCd=21&search=all&keyword=&seq=2077507#none",
+      "deadline": "2026-08-28",
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "hyundai:javascript:void(0);",
+      "source": "hyundai",
+      "title": "Question 강사 지원 방법",
+      "type": "강사모집",
+      "url": "javascript:void(0);",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "hyundai:https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005#none",
+      "source": "hyundai",
+      "title": "강사지원·제휴 제안 문의",
+      "type": "강사모집",
+      "url": "https://www.ehyundai.com/newCulture/CT/CT050400_L.do?comCode=B0111005#none",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "lotte:https://culture.lotteshopping.com/information/application/index.do",
+      "source": "lotte",
+      "title": "강사지원·제휴신청",
+      "type": "강사모집",
+      "url": "https://culture.lotteshopping.com/information/application/index.do",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    },
+    {
+      "id": "lotte:javascript:",
+      "source": "lotte",
+      "title": "강사지원·제휴신청",
+      "type": "강사모집",
+      "url": "javascript:",
+      "deadline": null,
+      "attachments": [],
+      "found": "2026-10-12",
+      "status": "auto"
+    }
+  ]
 }
