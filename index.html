@@ -148,10 +148,29 @@ textarea { min-height: 70px; resize: vertical; }
   .dday b { font-size: 17px; }
   .summary b { font-size: 18px; }
 }
+/* 스티커 모드: 바탕화면 작은 창(#sticker)에서 D-day 목록만 */
+html.is-sticker .wrap > :not(#sticker) { display: none !important; }
+html.is-sticker .wrap { padding-block: 14px; gap: 0; }
+html.is-sticker body { font-size: 14px; }
+#sticker { display: grid; gap: 8px; padding-top: 6px; }
+.st-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.st-head b { font: 800 18px/1.2 var(--f-display); }
+.st-head span { font: 500 11px var(--f-mono); color: var(--muted); }
+.st-item { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; text-decoration: none; color: var(--ink); }
+.st-item:hover { border-color: var(--accent); }
+.st-d { font: 600 15px/1 var(--f-mono); text-align: center; color: var(--accent); font-variant-numeric: tabular-nums; }
+.st-item.hot .st-d { color: var(--stamp); }
+.st-item.soon .st-d { color: var(--warn); }
+.st-item > span:last-child { min-width: 0; display: grid; gap: 2px; }
+.st-t { font-weight: 600; font-size: 13px; line-height: 1.35; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.st-s { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.st-sec { font: 600 11px var(--f-mono); letter-spacing: .06em; color: var(--muted); margin-top: 4px; }
+.st-foot { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 2px; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
 <div class="wrap">
+  <section id="sticker" aria-label="스티커 보기" hidden></section>
   <header>
     <span class="eyebrow" id="today"></span>
     <h1>대구 강사공고 레이더</h1>
@@ -215,7 +234,8 @@ textarea { min-height: 70px; resize: vertical; }
 </div>
 
 <script>
-const TODAY = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); })();
+const today0 = () => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
+let TODAY = today0();
 
 /* 2026-10-11 조사. board = 공고가 실제로 올라오는 게시판, apply = 지원/등록 페이지, forms = 양식(링크가 있으면 직접 받기). */
 const SOURCES = [
@@ -530,7 +550,7 @@ function renderSummary() {
   document.getElementById("checkedLine").textContent = `마지막 점검 ${checkedOn} · 기관 ${SOURCES.length}곳`;
 }
 
-function renderAll() { renderSummary(); renderNotices(); renderForecast(); renderSites(); }
+function renderAll() { renderSummary(); renderNotices(); renderForecast(); renderSites(); renderSticker(); }
 
 document.querySelector("nav").addEventListener("click", e => {
   const b = e.target.closest("button[data-tab]"); if (!b) return;
@@ -567,6 +587,32 @@ document.getElementById("addForm").addEventListener("submit", e => {
   document.getElementById("toast").textContent = `추가했습니다: ${n.title} (D-${Math.max(0, diffDays(n.deadline))})`;
   renderAll();
 });
+
+function renderSticker() {
+  const el = document.getElementById("sticker");
+  const dd = d => { const n = diffDays(d); return n === 0 ? "D-DAY" : n > 0 ? `D-${n}` : `D+${-n}`; };
+  const live = allNotices().filter(n => n.status === "진행중" || n.status === "예정" || n.status === "자동")
+    .sort((a, b) => (a.deadline ? diffDays(a.deadline) : 999) - (b.deadline ? diffDays(b.deadline) : 999));
+  const soon = FORECAST.filter(f => !f.live && diffDays(f.start) > 0).sort((a, b) => parse(a.start) - parse(b.start)).slice(0, 3);
+  const item = (href, d, cls, title, sub) => `<a class="st-item ${cls}" href="${esc(href)}" target="_blank" rel="noopener"><span class="st-d">${d}</span><span><span class="st-t">${esc(title)}</span><span class="st-s">${esc(sub)}</span></span></a>`;
+  el.innerHTML = `<div class="st-head"><b>강사공고 레이더</b><span>${TODAY.getMonth() + 1}.${TODAY.getDate()} 기준</span></div>
+    <div class="st-sec">접수 중 · 예정</div>
+    ${live.map(n => {
+      const src = SRC[n.src] || { name: n.src, board: "#" };
+      const d = n.deadline ? (n.status === "예정" && n.open ? `${dd(n.open)}` : dd(n.deadline)) : "확인";
+      const cls = n.deadline && n.status !== "예정" && diffDays(n.deadline) <= 14 ? "hot" : n.status === "예정" ? "soon" : "";
+      const sub = `${src.name} · ${n.status === "예정" ? `${fmt(n.open)} 열림` : n.deadline ? `${fmt(n.deadline)} 마감` : "마감일 원문 확인"}`;
+      return item(n.link || src.board, d, cls, n.title, sub);
+    }).join("") || '<p class="st-s">지금 열린 공고가 없습니다.</p>'}
+    <div class="st-sec">곧 열릴 예상</div>
+    ${soon.map(f => item((SRC[f.src] || {}).board || "#", dd(f.start), "soon", f.title, `예상 ${fmt(f.start)} ~ ${fmt(f.end)}`)).join("")}
+    <div class="st-foot"><span>Claude 점검 ${esc(checkedOn)}</span><span>매주 월 09시 갱신</span></div>`;
+}
+if (location.hash === "#sticker") {
+  document.documentElement.classList.add("is-sticker");
+  document.getElementById("sticker").hidden = false;
+}
+setInterval(() => { const t = today0(); if (+t !== +TODAY) { TODAY = t; renderAll(); } }, 60 * 60 * 1000);
 
 const savedTab = store.get("tab", null);
 if (savedTab) document.querySelector(`nav button[data-tab="${savedTab}"]`)?.click();
