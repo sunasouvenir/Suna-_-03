@@ -5,8 +5,6 @@
 # 지우기: launchctl unload ~/Library/LaunchAgents/kr.daegu.radar.sticker.plist && rm 그 파일
 URL="https://claude.ai/artifact/7NX6b849x4pkF1HH1JBwD6#sticker"
 W=380; H=700
-SW=$(osascript -e 'tell application "Finder" to get item 3 of (get bounds of window of desktop)')
-X=$((SW - W - 16)); Y=40
 if [ -d "/Applications/Google Chrome.app" ]; then APP="Google Chrome";
 elif [ -d "/Applications/Microsoft Edge.app" ]; then APP="Microsoft Edge";
 else echo "Chrome 또는 Edge가 필요합니다."; read -r; exit 1; fi
@@ -19,7 +17,7 @@ cat > "$PLIST" <<PL
   <key>Label</key><string>kr.daegu.radar.sticker</string>
   <key>ProgramArguments</key><array>
     <string>/usr/bin/open</string><string>-na</string><string>$APP</string><string>--args</string>
-    <string>--app=$URL</string><string>--window-size=$W,$H</string><string>--window-position=$X,$Y</string>
+    <string>--app=$URL</string><string>--window-size=$W,$H</string><string></string>
   </array>
   <key>RunAtLoad</key><true/>
 </dict></plist>
