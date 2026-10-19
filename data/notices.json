@@ -1,6 +1,22 @@
 {
-  "checked": "2026-10-12",
+  "checked": "2026-10-19",
   "notices": [
+    {
+      "id": "nam:https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=192",
+      "source": "nam",
+      "title": "계명대학교 「시민과 함께하는 열린대학」 AI 프롬프트활용능력 자격증 취득과정 수강생 모집 및 강의계획서 안내",
+      "type": "수강생모집",
+      "url": "https://nam.daegu.kr/lll/board/view.do?a_num=79905075&b_num=192",
+      "deadline": null,
+      "attachments": [
+        {
+          "name": "강의계획서(안)(AI 프롬프트활용능력).pdf",
+          "url": "https://nam.daegu.kr/lll/board/down.do?a_num=79905075&b_num=192&f_num=1"
+        }
+      ],
+      "found": "2026-10-19",
+      "status": "auto"
+    },
     {
       "id": "du:https://lifelong.daegu.ac.kr/article/notice/detail/2841",
       "source": "du",
